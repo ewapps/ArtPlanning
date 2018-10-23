@@ -1,0 +1,447 @@
+﻿@{
+    ViewBag.Title = "Outils";
+    ViewBag.MenuSelected = ViewBag.Title.ToUpper();
+    ViewBag.BreadCrumb = "<li>Outils</li><li>Gestion des entrepôts</li><li class=\"active\"><strong>Liste</strong></li>";
+    ViewBag.SubTitle = "Liste des emplacements et composition des entrepôts";
+    ViewBag.Message = "Gérer les entrepôts.";
+}
+
+@section Styles
+{
+    @Styles.Render("~/jstree/css")
+
+    <style>
+
+        .context-menu-icon {
+            min-height: 18px;
+            background-repeat: no-repeat;
+            background-position: 4px 2px;
+        }
+
+        .context-menu-icon-save {
+            background-image: url("http://i.imgur.com/4LyeGi1.png");
+        }
+
+        .myScrollableBlock {
+            display: block;
+            height: 300px;
+            overflow: auto;
+        }
+
+    </style>
+}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <!-- TITLE & MESSAGE -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content text-center p-md">
+                        <h2>@ViewBag.SubTitle</h2>
+                        <p>@ViewBag.Message</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CONTENT -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="mainContent" class="ibox">
+                    <div class="ibox-content p-md">
+
+                        <div>
+
+                            <button id="createButton" type="button" class="btn btn-primary btn-circle btn-lg" onclick="createNode();"><i class="fas fa-plus-circle"></i></button>
+                            <button id="renameButton" type="button" class="btn btn-warning btn-circle btn-lg" onclick="renameNode();"><i class="fas fa-pencil-alt"></i></button>
+                            <button id="deleteButton" type="button" class="btn btn-danger btn-circle btn-lg" onclick="deleteNode();"><i class="fas fa-trash-alt"></i></button>
+
+                            <span class="pull-right">
+                                @*<button id="deleteButton" type="button" class="btn btn-white btn-circle btn-lg" onclick="deleteNode();"><i class="fas fa-trash-alt"></i></button>
+                                <button id="deleteButton" type="button" class="btn btn-white btn-circle btn-lg" onclick="deleteNode();"><i class="far fa-compress-alt"></i></button>*@
+                                <button id="refreshButton" type="button" class="btn btn-white btn-circle btn-lg" onclick="generateQRCodeNode();"><i class="fas fa-qrcode"></i></button>
+                                <button id="refreshButton" type="button" class="btn btn-white btn-circle btn-lg" onclick="refreshWarehousesNode();"><i class="fas fa-sync-alt"></i></button>
+                            </span>
+
+                        </div>
+
+                        <hr />
+                        
+                        <!-- LOADING -->
+                        <div class="sk-spinner sk-spinner-three-bounce">
+                            <div class="sk-bounce1"></div>
+                            <div class="sk-bounce2"></div>
+                            <div class="sk-bounce3"></div>
+                        </div>
+                        <!-- WAREHOUSE LIST -->
+                        <div id="available-warehouse"></div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="modal inmodal" id="generateQRCodeModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div id="modal-content" class="modal-content fadeInDown">
+
+                <!-- HEADER -->
+
+                <div class="modal-header" style="padding: 20px 15px;">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                    <i class="fas fa-qrcode modal-icon"></i>
+                    @*<h5 class="modal-title" style="margin-top: 15px;" id="generateQRCodeModalWindowTitle">QRCode</h5>*@
+                    @*<div style="float: right; margin-top: 15px;">
+                        <button type="button" id="printGeneratedQRCodeButton" onclick="printGeneratedQRCodeClickCallback();" class="btn btn-circle btn-primary"><i class="fas fa-print"></i></button>
+                    </div>*@
+                </div>
+
+                <!-- BODY -->
+
+                <div class="modal-body">
+
+                    <div id="modalForm">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                       
+                                        <div class="contact-box" style="margin-top: 35px;">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="text-center">
+                                                        <img id="QRCodeImage" style="height: 150px; width: 150px; border: 1px solid #e7eaec;" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-8">
+                                                    <h3 id="generateQRCodeModalWindowTitle"></h3>
+                                                    <div id="generateQRCodeId" class="small"></div>
+                                                    <div>
+                                                        <div style="margin-top: 68px;">
+                                                            <a class="btn btn-success btn-rounded btn-block" onclick="printGeneratedQRCodeClickCallback();">
+                                                                <i class="fas fa-print"></i>&nbsp;&nbsp;<small>Imprimer</small>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                                                                      
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="modalWait" class="sk-spinner sk-spinner-three-bounce">
+                        <div class="sk-bounce1"></div>
+                        <div class="sk-bounce2"></div>
+                        <div class="sk-bounce3"></div>
+                    </div>
+
+                </div>
+
+                <!-- FOOTER -->
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jstree")
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $.jstree.defaults.plugins = ["conditionalselect", "types"];
+
+            $("#available-warehouse")
+
+                .on('rename_node.jstree', function (e, data) {
+                    //debugger;
+                })
+
+                .on('changed.jstree', function (e, data) {
+                    //debugger;
+                })
+
+                .jstree({
+                    core: {
+                        animation: 0,
+                        check_callback: function (operation, node, node_parent, node_position, more) {
+                         
+                            // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
+                            // in case of 'rename_node' node_position is filled with the new node name
+
+                            if (operation === 'rename_node')
+                            {
+                                var success = false;
+                                var nodeViewModel = {}
+
+                                nodeViewModel.id = node.id;
+                                nodeViewModel.parent = node_parent.id;
+                                nodeViewModel.text = node_position;
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '@Url.Action("RenameNode")',
+                                    dataType: 'json',
+                                    contentType: 'application/json;charset=utf-8',
+                                    data: JSON.stringify(nodeViewModel),
+                                    success: function (data) {
+                                        if (data) {
+                                            $('#available-warehouse').jstree(true).refresh($("#available-warehouse").jstree(true).get_selected(true));
+                                            success = true;
+                                        }
+                                        else {
+                                            success = false;
+                                        }
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        toastr.error(thrownError, 'Erreur: ' + xhr.status)
+                                    }
+                                });
+
+                                return success;
+                            }
+                            else if (operation === 'delete_node') {
+                                
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '@Url.Action("DeleteNode")',
+                                    dataType: 'json',
+                                    contentType: 'application/json;charset=utf-8',
+                                    data: JSON.stringify({ id: node.id }),
+                                    success: function (data) {
+                                        if (data) {
+                                            $('#available-warehouse').jstree(true).refresh();
+                                            success = true;
+                                        }
+                                        else {
+                                            success = false;
+                                        }
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        toastr.error(thrownError, 'Erreur: ' + xhr.status)
+                                    }
+                                });
+                            }
+                            else {
+                                return true;
+                            }
+                        },
+                        data: {
+                            url: '@Url.Action("GetWarehouses")',
+                            type: 'POST',
+                            data: function (node) {
+                                return { id: node.id };
+                            },
+                            beforeSend: function () {
+                                $('#j1_loading').hide();
+                                $('#mainContent').children('.ibox-content').toggleClass('sk-loading');
+                            },
+                            success: function (data) {
+                                setTimeout(function () {
+                                    $('#mainContent').children('.ibox-content').toggleClass('sk-loading');
+                                }, 500);
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                toastr.error(thrownError, 'Erreur: ' + xhr.status)
+                                $('#mainContent').children('.ibox-content').toggleClass('sk-loading');
+                            }
+                        },
+                        multiple: false,
+                        plugins: ["conditionalselect", "types"],
+                        //state: {
+                        //    key: "state_warehouses",                            
+                        //},
+                        strings: {
+                            'Loading ...': '',
+                            'New node': 'Nouvel emplacement'
+                        },
+                        themes: {
+                            dots: false,
+                            stripes: false
+                        },
+                        types: {
+                            "#": {
+                                icon: 'glyphicon glyphicon-home'
+                            },
+                            "root": {
+                                icon: 'glyphicon glyphicon-home'
+                            },
+                            "default": {
+                                icon: 'glyphicon glyphicon-th-large'
+                            }
+                        },
+                        worker: false
+                    }
+                });
+
+            $('#generateQRCodeModal').on('show.bs.modal', function (e) {
+                
+                var warehouse_id = $(this).data('warehouse-id');
+                var warehouse_text = $(this).data('warehouse-text');
+
+                $('#generateQRCodeModalWindowTitle').html(warehouse_text);
+                $('#generateQRCodeId').html(warehouse_id);
+                
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GenerateQRCode")',
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    data: { code: warehouse_id},
+                    success: function (data) {
+
+                        setTimeout(function () {
+
+                            if (data) {
+                                $('#QRCodeImage').attr('src', data);
+                            }
+                            else {
+
+                            }
+
+                            $("#modalWait").hide();
+                            $("#modalForm").show();
+
+                        }, 500);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        $("#modalWait").hide();
+                        $("#modalForm").show();
+                        toastr.error(thrownError, 'Erreur: ' + xhr.status)
+                    }
+                });
+            });
+        });
+
+        /* */
+        function createNode() {
+            var tree = $('#available-warehouse').jstree(true);
+            var parentNode = tree.get_selected();
+            
+            if (parentNode.length > 0) {
+                parentNode = parentNode[0];
+                var args = { icon: "glyphicon glyphicon-th-large" };
+                var newNode = tree.create_node(parentNode, args);
+            }
+            else {
+                var args = { icon: "glyphicon glyphicon-home" };
+                var newNode = tree.create_node('#', args, 'last');
+            }
+
+            if (newNode) {
+                tree.deselect_node(parentNode);
+                tree.select_node(newNode);
+                tree.edit(newNode);
+            }
+        }
+
+        /* */
+        function renameNode() {
+            var tree = $("#available-warehouse").jstree(true);
+            var selectedNode = tree.get_selected();
+
+            if (!selectedNode.length) {
+                swal({
+                    title: 'Edition',
+                    text: 'Aucun emplacement sélectionné',
+                    type: 'warning'
+                });
+            }
+            else {
+                selectedNode = selectedNode[0];
+                tree.edit(selectedNode);
+            }
+        }
+
+        /* */
+        function deleteNode() {
+            var tree = $("#available-warehouse").jstree(true);
+            var selectedNode = tree.get_selected();
+
+            if (!selectedNode.length) {
+                swal({
+                    title: 'Suppression',
+                    text: 'Aucun emplacement sélectionné',
+                    type: 'warning'
+                });
+            }
+            else {
+                swal({
+                    title: 'Êtes-vous sûr ?',
+                    text: 'Supprimer les emplacements ?',
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    cancelButtonText: 'Non, abandonner',
+                    confirmButtonText: 'Oui, continuer',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        tree.delete_node(selectedNode);
+                    }
+                });
+            }
+        }
+
+        /* */
+        function refreshWarehousesNode() {
+            $('#available-warehouse').jstree(true).refresh(true, true);
+        }
+
+        /* */
+        function generateQRCodeNode() {
+
+            var tree = $("#available-warehouse").jstree(true);
+            var selectedNode = tree.get_selected(true);
+            
+            if (!selectedNode.length) {
+                swal({
+                    title: 'QRCode',
+                    text: 'Aucun emplacement sélectionné',                    
+                    type: 'warning'
+                });
+            }
+            else {
+                $('#generateQRCodeModal').data('warehouse-id', selectedNode[0].id);
+                $('#generateQRCodeModal').data('warehouse-text', selectedNode[0].text);
+                $("#modalWait").show();
+                $("#modalForm").hide();
+                $('#generateQRCodeModal').modal('show');
+            }
+        }
+
+        function printGeneratedQRCodeClickCallback() {
+            QRCodePrint($('#QRCodeImage').attr('src')); return false;
+        }
+
+        function QRCodeSourcetoPrint(source) {
+            return "<html><head><script>function step1(){\n" +
+                "setTimeout('step2()', 10);}\n" +
+                "function step2(){window.print();window.close()}\n" +
+                "</scri" + "pt></head><body onload='step1()'>\n" +
+                "<img src='" + source + "' style='height:150px; width=150px;' /></body></html>";
+        }
+        function QRCodePrint(source) {
+            Pagelink = "about:blank";
+            var pwa = window.open(Pagelink, "_new");
+            pwa.document.open();
+            pwa.document.write(QRCodeSourcetoPrint(source));
+            pwa.document.close();
+        }        
+
+    </script>
+}

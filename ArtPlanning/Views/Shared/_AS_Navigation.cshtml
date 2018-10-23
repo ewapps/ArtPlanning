@@ -1,0 +1,65 @@
+﻿@using ArtPlanning.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    @*<span>
+                    <img alt="image" class="img-circle" src="~/Images/Profile/profile_small.jpg" />
+                </span>*@
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold">
+                                    @{
+
+                                        if (Request.IsAuthenticated)
+                                        {
+                                            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                                            var currentUser = manager.FindById(User.Identity.GetUserId());
+                                            if (currentUser != null)
+                                            {
+                                                @Html.Raw(string.Format("{0} {1}", currentUser.FirstName, currentUser.LastName))
+                                            }
+                                        }
+                                    }
+                                </strong>
+                            </span>
+                            <span class="text-muted text-xs block">Mon compte<b class="caret"></b></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        <li><a href="#">Modifier mon profil</a></li>
+                        <li class="divider"></li>
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Se déconnecter</a></li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    AS+
+                </div>
+            </li>
+            <!-- HOME -->
+            <li class="@Html.IsSelected(controller: "AS_Home")">
+                <a href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i> <span class="nav-label">Accueil</span></a>
+            </li>
+            <!-- AGENDA -->
+            <li class="@Html.IsSelected(controller: "AS_Agenda")">
+                <a href="@Url.Action("Index", "Agenda")"><i class="fas fa-clock"></i> <span class="nav-label">Agenda</span></a>
+            </li>
+            <!-- USERS -->
+            <li class="@Html.IsSelected(controller: "AS_Users")">
+                <a href="@Url.Action("Index", "Users")"><i class="fas fa-user"></i> <span class="nav-label">Utilisateurs</span></a>
+            </li>
+            <!-- OUTILS -->
+            <li class="@Html.IsSelected(controller: "AS_Tools_WarehouseManagement")">
+                <a href="#" class="has-arrow"><i class="fas fa-cogs"></i> <span class="nav-label">Outils</span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li class="@Html.IsSelected(controller: "AS_Tools_WarehouseManagement")"><a href="@Url.Action("Index", "WarehouseManagement")">Entrepôts</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

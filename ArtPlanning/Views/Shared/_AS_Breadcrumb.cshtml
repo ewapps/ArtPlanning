@@ -1,0 +1,9 @@
+﻿<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-9">
+        <h2>@ViewBag.MenuSelected</h2>
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("ACCUEIL", "Index", "Home")</li>
+            @Html.Raw(ViewBag.BreadCrumb)
+        </ol>
+    </div>
+</div>

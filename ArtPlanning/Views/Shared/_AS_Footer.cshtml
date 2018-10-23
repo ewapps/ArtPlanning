@@ -1,0 +1,22 @@
+﻿@using ArtPlanning.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+
+<div class="footer" id="footer-content">
+    <div class="pull-right">
+        @{
+            if (Request.IsAuthenticated)
+            {
+                var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                var currentUser = manager.FindById(User.Identity.GetUserId());
+                if (currentUser != null && currentUser.LastConnectionDate.HasValue)
+                {
+                    @Html.Raw("Connecté depuis ")<strong>@currentUser.LastConnectionDate</strong>
+                }
+            }
+        }
+    </div>
+    <div>
+        <strong>Copyright</strong>&nbsp;<a href="http://www.ewapps.com" target="_blank">EWAPPS S.A.</a> &copy; @DateTime.Now.Year
+    </div>
+</div>

@@ -1,0 +1,303 @@
+﻿@model ArtPlanning.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Gestion des utilisateurs";
+    ViewBag.MenuSelected = ViewBag.Title.ToUpper();
+}
+
+@section Styles
+{
+    @Styles.Render("~/bsdatepicker/css")
+    @Styles.Render("~/colorpicker/css")
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "updateForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ID)
+
+    <input type="hidden" name="backToList" id="backToList" value=true />
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content text-center p-md">
+                        <h2>@ViewBag.SubTitle</h2>
+                        <p>@ViewBag.Message</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- MAIN INFOS -->
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Informations générales</h5>
+                    </div>
+                    <div class="ibox-content p-md">
+                        <div class="form-horizontal">
+                            <!-- LASTNAME -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Nom</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Info du champs"><i class="fas fa-info"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIRSTNAME -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Prénom</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Info du champs"><i class="fas fa-info"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- MAIL -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Courrier électronique</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.Mail, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Info du champs"><i class="fas fa-info"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- PASSWORD -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Mot de passe</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Info du champs"><i class="fas fa-info"></i></span>
+                                    </div>
+                                    <div class="help-block m-b-none text-left">A compléter uniquement pour modifier le mot de passe ou lors de la création d'un nouvel utilisateur.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- OTHER INFOS -->
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Autres informations</h5>
+                    </div>
+                    <div class="ibox-content p-md">
+                        <div class="form-horizontal">
+                            <!-- ACTIVE -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Statut</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        @Html.DropDownList("active", new SelectList(ViewBag.StatusList, "Value", "Text", ""), new { @class = "form-control m-b" })
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Info du champs"><i class="fas fa-info"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- LANGUAGE -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Langue</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        @Html.DropDownList("language", new SelectList(ViewBag.LanguagesList, "Value", "Text", ""), new { @class = "form-control m-b" })
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Info du champs"><i class="fas fa-info"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- BIRTHDATE -->
+                            <div class="form-group" id="dateBirthday">
+                                <label class="col-sm-2 control-label">Date de naissance</label>
+                                <div class="col-md-10">
+                                    <div class="input-group date">
+                                        <span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span>
+                                        @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Info du champs"><i class="fas fa-info"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- COULEUR -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Couleur</label>
+                                <div class="col-md-10">
+                                    <div class="input-group" id="colorPicker">
+                                        @Html.EditorFor(model => model.Color, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="input-group-addon"><i></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- INITIALES -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Initiales</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.Initials, new { htmlAttributes = new { @class = "form-control text-uppercase", @maxlength = "3" } })
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Info du champs"><i class="fas fa-info"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- TRACE -->
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Traçabilité</h5>
+                    </div>
+                    <div class="ibox-content p-md">
+                        <div class="form-horizontal">
+                            <!-- LAST CONNECTION DATE TRACE -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Dernière connexion</label>
+                                <div class="col-md-10 control-value">@Html.DisplayFor(model => model.LastConnectionDate)</div>
+                            </div>
+                            <!-- ADDED TRACE -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Créé le</label>
+                                <div class="col-md-10 control-value">@Html.DisplayFor(model => model.AddedLabel)</div>
+                            </div>
+                            <!-- MODIFICATION TRACE -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Dernière modification le</label>
+                                <div class="col-md-10 control-value">@Html.DisplayFor(model => model.ModificationLabel)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- SUBMIT -->
+            <div class="col-lg-12 text-center">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input type="button" class="btn btn-default" onclick='location.href="@Url.Action("Index", "Users")"' value="Annuler" />
+                            <input type="button" class="btn btn-success" onclick="submitForm();" value="Sauver" />
+                            <input type="submit" class="btn btn-primary" value="Sauver et retourner à la liste" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+
+    @Scripts.Render("~/bundles/validate")
+    @Scripts.Render("~/bundles/bsdatepicker")
+    @Scripts.Render("~/bundles/colorpicker")
+
+    <script>
+        
+        var validator = $("#updateForm").validate();
+        
+        $(function () {
+
+            $('.wrapper').tooltip({
+                selector: "[data-toggle=tooltip]",
+                container: "body",
+                trigger: "hover"
+            });
+
+            // SCHEDULED START DATEPICKER
+
+            $('#dateBirthday .input-group.date').datepicker({
+                format: "dd/mm/yyyy",
+                autoclose: true,
+                language: "fr"
+            });
+
+            // LASTNAME
+            
+            $("#LastName").rules("add", {
+                required: true,
+                messages: {
+                    required: 'Le champ \'Nom\' est requis'
+                }
+            });
+
+            // FIRST NAME
+
+            $("#FirstName").rules("add", {
+                required: true,
+                messages: {
+                    required: 'Le champ \'Prénom\' est requis'
+                }
+            });
+
+            // MAIL
+
+            $("#Mail").rules("add", {
+                required: true,
+                messages: {
+                    required: 'Le champ \'Courrier électronique\' est requis'
+                }
+            });
+
+            // PASSWORD
+
+            if ('@Model.ID' == '') {
+                $("#Password").rules("add", {
+                    required: true,
+                    minlength: 8,
+                    pattern: /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[\W])[a-zA-Z0-9\W]{8,}$/,
+                    messages: {
+                        required: 'Le champ \'Mot de passe\' est requis',
+                        minlength: 'Le mot de passe doit contenir 8 caractères (dont au moins 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial)',
+                        pattern: 'Le mot de passe doit contenir 8 caractères (dont au moins 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial)'
+                    }
+                    
+                });
+            } else {
+                $("#Password").rules("add", {
+                    minlength: 8,
+                    pattern: /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[\W])[a-zA-Z0-9\W]{8,}$/,
+                    messages: {
+                        minlength: 'Le mot de passe doit contenir 8 caractères (dont au moins 1 minuscule, 1 majuscule et 1 caractère spécial)',
+                        pattern: 'Le mot de passe doit contenir 8 caractères (dont au moins 1 minuscule, 1 majuscule et 1 caractère spécial)'
+                    }
+                });
+            };
+
+            // COLOR PICKER
+            $('#colorPicker').colorpicker({
+                fallbackColor: '#01DF3A',
+                format: 'hex',
+                extensions: [
+                    {
+                        name: 'swatches',
+                        colors: {
+                            'red': '#FF0000',
+                            'default': '#777777',
+                            'primary': '#337ab7',
+                            'success': '#5cb85c',
+                            'info': '#5bc0de',
+                            'warning': '#f0ad4e',
+                            'danger': '#d9534f'
+                        },
+                        namesAsValues: true
+                    }
+                ]
+            });
+
+        });
+        
+        function submitForm() {
+            if ($("#updateForm").valid()) {
+                $("#backToList").val(false);
+                $("#updateForm").submit();
+            } else {
+                validator.focusInvalid();
+            }
+        };
+
+    </script>
+}

@@ -1,0 +1,1818 @@
+﻿@using ArtPlanning.Bundles
+
+@{
+    ViewBag.Title = "Agenda";
+    ViewBag.MenuSelected = ViewBag.Title.ToUpper();
+    ViewBag.BreadCrumb = "<li class=\"active\"><strong>Agenda</strong></li>";
+}
+
+@section Styles
+{
+    @Styles.Render("~/fullcalendar/css")
+    @Styles.RenderFormat(BundlesFormats.PRINT, "~/fullcalendarprint/css")
+    @Styles.Render("~/icheck/css")
+    @Styles.Render("~/bsdatepicker/css")
+    @Styles.Render("~/clockpicker/css")
+    @Styles.Render("~/select2/css")
+    @Styles.Render("~/material/css")
+    @Styles.Render("~/awesomecheckbox/css")
+    @Styles.Render("~/chosen/css")
+    @Styles.Render("~/qtip/css")
+
+    <style>
+
+        .toast-top-center {
+            top: 10px;
+            right: 0;
+            width: 100%;
+        }
+
+        .chosen-container-bring-front {
+            z-index: 3005;
+        }
+
+        .chosen-container-multi .chosen-choices li.search-choice {
+            background: #f1f1f1;
+            border: 1px solid #e5e6e7;
+            border-radius: 2px;
+            box-shadow: none;
+            color: #333333;
+            cursor: default;
+            line-height: 13px;
+            margin: 5px 0 3px 5px;
+            padding: 3px 20px 3px 5px;
+            position: relative;
+        }
+
+        .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+            z-index: 2;
+            color: #ffffff;
+            cursor: default;
+            background-color: #f8ac59;
+            border-color: #f8ac59;
+        }
+
+        .pagination-container {
+            position: absolute;
+            bottom: 19px;
+        }
+
+        .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+            background-color: #ffffff;
+            opacity: 1;
+        }
+
+    </style>
+}
+
+<!-- --------------- -->
+<!-- WRAPPER CONTENT -->
+<div class="wrapper wrapper-content">
+
+    <!-- FOLDERS & CALENDAR -->
+    <div class="row animated fadeInRight">
+        <div class="col-lg-3">
+            <div id="navigationContent">
+                <div id="folder-content" class="ibox-content" style="box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3); border-top-width: 0px; height: 750px;">
+                    @using (Html.BeginForm("", "", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "searchForm" }))
+                    {
+                        <div id="search-content" style="margin-bottom: 7px;">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-small" name="search" id="searchCriteria" placeholder="Rechercher un dossier..." />
+                                <div class="input-group-btn">
+                                    <a class="btn btn-white btn-bitbucket" href="javascript:searchFolder();">
+                                        <i class="fas fa-search"></i>
+                                    </a>
+                                    <a class="btn btn-white btn-bitbucket" href="javascript:clearCriteria();">
+                                        <i class="fas fa-eraser"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <!-- LOADING -->
+                    <div class="sk-spinner sk-spinner-three-bounce">
+                        <div class="sk-bounce1"></div>
+                        <div class="sk-bounce2"></div>
+                        <div class="sk-bounce3"></div>
+                    </div>
+                    <!-- FOLDERS LIST -->
+                    <div id='available-folders'></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div id="calendar-content" class="ibox-content" style="box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3); border-top-width: 0px; height: 750px;">
+                <!-- CALENDAR -->
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="small-staff-members-box fadeInDown animated" style="z-index: 1000;">
+    <div class="heading">
+        Chauffeurs
+    </div>
+    <div class="content">
+        <div class="ibox-content" style="padding: 15px; height: 190px;">
+            <span class="checkbox checkbox-primary" style="margin-top: -1px;padding: 0px;">
+                <input class="i-checks driver-all-check" id="selectAllDriver" name="driver-all-check" type="checkbox" value="' + member.ID + '" checked />&nbsp;&nbsp;Tous
+            </span>
+            <hr style="margin-top: 0px; margin-bottom: 5px;" />
+            <ul class="staff-list full-height-scroll" id="staff-list" style="padding: 0px;" />
+        </div>
+    </div>
+
+</div>
+
+<div id="small-staff-members">
+    <span class="badge badge-warning pull-right" id="staff-members-badge" style="display: none;">0</span>
+    <a class="open-small-staff-members">
+        <i class="fas fa-user"></i>
+    </a>
+</div>
+
+<div id="small-add-task">
+    <a class="open-small-add-task">
+        <i class="fas fa-plus"></i>
+    </a>
+</div>
+
+<!-- ------------------- -->
+<!-- ADD TASK VIEW MODAL -->
+<div class="modal inmodal" id="addCalendarTaskModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <i class="fas fa-calendar-alt modal-icon"></i>
+                <h5 class="modal-title" style="margin-top: 15px;" id="addModalWindowTitle">Planification</h5>
+                <small class="font-bold">Permet de planifier une nouvelle tâche à l'agenda.</small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="ibox-content" style="height: 378px;">
+                            <div class="form-group">
+                                <span class="pull-right">
+                                    <span class="checkbox checkbox-primary" style="margin-top: -1px;">
+                                        @Html.CheckBox("selectAllTask")
+                                        <label for="selectAllTask">Toutes</label>
+                                    </span>
+                                </span>
+                                <h4 style="display: inline; text-transform:uppercase;">Tâches disponibles</h4>
+                            </div>
+                            <div style="height: 300px; padding-top: 15px;">
+                                <ul class="sortable-list task-list ui-sortable full-height-scroll" id="tasks-list" style="padding-left: 5px; padding-right: 10px;" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="ibox-content">
+                            <div class="form-horizontal">
+                                <div class="form-group" id="addScheduledStartDateTime">
+                                    <label class="col-sm-3 control-label">Début</label>
+                                    <div class="col-sm-5">
+                                        <div class="input-group date">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar-alt"></i>
+                                            </span>
+                                            <input type="text" placeholder="Date" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="input-group clockpicker">
+                                            <input type="text" placeholder="Heure" class="form-control">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="addScheduledEndDateTime">
+                                    <label class="col-sm-3 control-label">Fin</label>
+                                    <div class="col-sm-5">
+                                        <div class="input-group date">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar-alt"></i>
+                                            </span>
+                                            <input type="text" placeholder="Date" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="input-group clockpicker">
+                                            <input type="text" placeholder="Heure" class="form-control">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Fixe</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            @Html.DropDownList("add_task_fixed", new SelectList(ViewBag.NoYesValues, "Value", "Text", ""), new { @class = "form-control m-b" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Chauffeur</label>
+                                    <div class="col-sm-9">
+                                        @Html.DropDownList("add_task_staff", (List<SelectListItem>)ViewBag.StaffList, new { @class = "form-control m-b chosen-select", multiple = "multiple" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Véhicule</label>
+                                    <div class="col-sm-9">
+                                        @Html.DropDownList("add_task_vehicle", (List<SelectListItem>)ViewBag.VehiclesList, new { @class = "form-control m-b chosen-select", multiple = "multiple" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Matériel</label>
+                                    <div class="col-sm-9">
+                                        @Html.DropDownList("add_task_material", (List<SelectListItem>)ViewBag.MaterialsList, new { @class = "form-control m-b chosen-select", multiple = "multiple" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Prestation</label>
+                                    <div class="col-sm-9">
+                                        @Html.DropDownList("add_task_service", (List<SelectListItem>)ViewBag.ServicesList, new { @class = "form-control m-b chosen-select", multiple = "multiple" })
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="pull-left"><button type="button" class="btn btn-danger" id="closeFolderButton">Clôturer</button></span>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button id="addSaveButton" type="button" class="btn btn-success">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- -------------------- -->
+<!-- EDIT TASK VIEW MODAL -->
+<div class="modal inmodal" id="editCalendarTaskModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content fadeInDown" id="edit-task-modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                @*<i class="fas fa-tasks modal-icon"></i>*@
+                <h5 class="modal-title" style="margin-top: 15px;" id="edit-task-modal-title">Tâches</h5>
+                <small class="font-bold" id="edit-task-modal-subtitle">Permet de mettre à jour une tâche de l'agenda.</small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    
+                    <div class="col-md-12">
+
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li id="tabFolder" class=""><a data-toggle="tab" href="#tab-folder">Dossier</a></li>
+                                <li id="tabTask" class="active"><a data-toggle="tab" href="#tab-task">Tâche</a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div id="tab-folder" class="tab-pane">
+
+                                    <div class="form-horizontal">
+
+                                        <br />
+                                        <div class="form-group" id="editTaskFolderNameRow">
+                                            <label class="col-sm-4 control-label">Nom</label>
+                                            <div class="col-sm-8">
+                                                <input id="edit_task_folder_name" type="text" class="form-control" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskFolderDescriptionRow">
+                                            <label class="col-sm-4 control-label">Description</label>
+                                            <div class="col-sm-8">
+                                                <input id="edit_task_folder_description" type="text" class="form-control" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskClientNameRow">
+                                            <label class="col-sm-4 control-label">Client</label>
+                                            <div class="col-sm-8">
+                                                <input id="edit_task_client_name" type="text" class="form-control" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskStreetRow">
+                                            <label class="col-sm-4 control-label">Rue</label>
+                                            <div class="col-sm-8">
+                                                <input id="edit_task_street" type="text" class="form-control" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskZipRow">
+                                            <label class="col-sm-4 control-label">Code postal</label>
+                                            <div class="col-sm-8">
+                                                <input id="edit_task_zip" type="text" class="form-control" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskCityRow">
+                                            <label class="col-sm-4 control-label">Localité</label>
+                                            <div class="col-sm-8">
+                                                <input id="edit_task_city" type="text" class="form-control" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskCountryRow">
+                                            <label class="col-sm-4 control-label">Pays</label>
+                                            <div class="col-sm-8">
+                                                <input id="edit_task_country" type="text" class="form-control" readonly />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div id="tab-task" class="tab-pane active">
+
+                                    <div class="form-horizontal">
+                                        
+                                        <br />
+                                        <div class="form-group" id="editScheduledFreeStartDateRow">
+                                            <label class="col-sm-4 control-label">Début</label>
+                                            <div class="col-sm-8">
+                                                <div class="input-group date">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar-alt"></i>
+                                                    </span>
+                                                    <input type="text" placeholder="Date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editScheduledFreeEndDateRow">
+                                            <label class="col-sm-4 control-label">Fin</label>
+                                            <div class="col-sm-8">
+                                                <div class="input-group date">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar-alt"></i>
+                                                    </span>
+                                                    <input type="text" placeholder="Date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editScheduledStartDateTimeRow">
+                                            <label class="col-sm-4 control-label">Début</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group date">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar-alt"></i>
+                                                    </span>
+                                                    <input type="text" placeholder="Date" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="input-group clockpicker">
+                                                    <input type="text" placeholder="Heure" class="form-control">
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-time"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editScheduledEndDateTimeRow">
+                                            <label class="col-sm-4 control-label">Fin</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group date">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar-alt"></i>
+                                                    </span>
+                                                    <input type="text" placeholder="Date" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="input-group clockpicker">
+                                                    <input type="text" placeholder="Heure" class="form-control">
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-time"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskTitleRow">
+                                            <label class="col-sm-4 control-label">Titre</label>
+                                            <div class="col-sm-8">
+                                                <input id="edit_task_title" type="text" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskCommentRow">
+                                            <label class="col-sm-4 control-label">Commentaire</label>
+                                            <div class="col-sm-8">
+                                                <textarea id="edit_task_comment" rows="3" class="form-control" style="resize: none;"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editFixedRow">
+                                            <label class="col-sm-4 control-label">Fixe</label>
+                                            <div class="col-sm-8">
+                                                <div class="input-group">
+                                                    @Html.DropDownList("edit_task_fixed", new SelectList(ViewBag.NoYesValues, "Value", "Text", ""), new { @class = "form-control m-b" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Chauffeur</label>
+                                            <div class="col-sm-8">
+                                                @Html.DropDownList("edit_task_staff", (List<SelectListItem>)ViewBag.StaffList, new { @class = "form-control m-b chosen-select", multiple = "multiple" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Véhicule</label>
+                                            <div class="col-sm-8">
+                                                @Html.DropDownList("edit_task_vehicle", (List<SelectListItem>)ViewBag.VehiclesList, new { @class = "form-control m-b chosen-select", multiple = "multiple" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Matériel</label>
+                                            <div class="col-sm-8">
+                                                @Html.DropDownList("edit_task_material", (List<SelectListItem>)ViewBag.MaterialsList, new { @class = "form-control m-b chosen-select", multiple = "multiple" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Prestation</label>
+                                            <div class="col-sm-8">
+                                                @Html.DropDownList("edit_task_service", (List<SelectListItem>)ViewBag.ServicesList, new { @class = "form-control m-b chosen-select", multiple = "multiple" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskAddedDateRow">
+                                            <label class="col-sm-4 control-label">Créé le</label>
+                                            <div class="col-sm-8 control-value"><span id="edit_task_added_date"></span></div>
+                                        </div>
+
+                                        <div class="form-group" id="editTaskModificationDateRow">
+                                            <label class="col-sm-4 control-label">Dernière modification le</label>
+                                            <div class="col-sm-8 control-value"><span id="edit_task_modification_date"></span></div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="pull-left"><button type="button" class="btn btn-danger" id="deleteTaskButton">Supprimer</button></span>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button id="editSaveButton" type="button" class="btn btn-success">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ------------------- -->
+<!-- SETTINGS VIEW MODAL -->
+<div class="modal inmodal" id="settingsView" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <h5 class="modal-title" style="margin-top: 15px;">Paramètres</h5>
+                <small class="font-bold">Permet de configurer l'agenda.</small>
+            </div>
+            <div style="padding: 15px; background: #f8fafb;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-main">Général</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-main" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Affichage</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr style="margin-top: 8px;">
+                                                    <td>
+                                                        <span class="checkbox checkbox-primary">
+                                                            @Html.CheckBox("option_display_view_groupByDateAndResource")<label for="option_display_view_groupByDateAndResource">Afficher les tâches groupées par date et par chauffeur</label>
+                                                        </span>
+                                                        @*<span class="checkbox checkbox-primary">
+                                                                @Html.CheckBox("option_display_view_groupByDateAndResource2")<label for="option_display_view_groupByDateAndResource2">Afficher les tâches groupées par date et par chauffeur</label>
+                                                            </span>*@
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Fermer</button>
+                @*<button id="editSaveButton" type="button" class="btn btn-success">Sauvegarder</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/fullcalendar")
+    @Scripts.Render("~/bundles/icheck")
+    @Scripts.Render("~/bundles/bsdatepicker")
+    @Scripts.Render("~/bundles/clockpicker")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/chosen")
+    @Scripts.Render("~/bundles/qtip")
+
+    <script type="text/javascript">
+
+        var force = false;
+        var allowSearch = true;
+
+            $(function () {
+
+                var addScheduledStartDateControl = '#addScheduledStartDateTime .input-group.date';
+                var addScheduledEndDateControl = '#addScheduledEndDateTime .input-group.date';
+                var addScheduledStartTimeControl = '#addScheduledStartDateTime .input-group.clockpicker';
+                var addScheduledEndTimeControl = '#addScheduledEndDateTime .input-group.clockpicker';
+
+                var editScheduledFreeStartDateControl = '#editScheduledFreeStartDateRow .input-group.date';
+                var editScheduledFreeEndDateControl = '#editScheduledFreeEndDateRow .input-group.date';
+
+                var editScheduledStartDateControl = '#editScheduledStartDateTimeRow .input-group.date';
+                var editScheduledEndDateControl = '#editScheduledEndDateTimeRow .input-group.date';
+                var editScheduledStartTimeControl = '#editScheduledStartDateTimeRow .input-group.clockpicker';
+                var editScheduledEndTimeControl = '#editScheduledEndDateTimeRow .input-group.clockpicker';
+
+                $('.wrapper').tooltip({
+                    selector: "[data-toggle=tooltip]",
+                    container: "body",
+                    trigger: "hover"
+                });
+
+                // SCHEDULED START DATEPICKER
+
+                $(addScheduledStartDateControl).datepicker({
+                    format: "dd/mm/yyyy",
+                    autoclose: true,
+                    language: "fr"
+                });
+
+                $(editScheduledStartDateControl).datepicker({
+                    format: "dd/mm/yyyy",
+                    autoclose: true,
+                    language: "fr"
+                });
+
+                // SCHEDULED END DATEPICKER
+
+                $(addScheduledEndDateControl).datepicker({
+                    format: "dd/mm/yyyy",
+                    autoclose: true,
+                    language: "fr"
+                });
+
+                $(editScheduledEndDateControl).datepicker({
+                    format: "dd/mm/yyyy",
+                    autoclose: true,
+                    language: "fr"
+                });
+
+                // SCHEDULED START CLOCKPICKER
+
+                $(addScheduledStartTimeControl).clockpicker({
+                    autoclose: true,
+                    doneText: 'Terminé'
+                });
+
+                $(editScheduledStartTimeControl).clockpicker({
+                    autoclose: true,
+                    doneText: 'Terminé'
+                });
+
+                // SCHEDULED END CLOCKPICKER
+
+                $(addScheduledEndTimeControl).clockpicker({
+                    autoclose: true,
+                    doneText: 'Terminé'
+                });
+
+                $(editScheduledEndTimeControl).clockpicker({
+                    autoclose: true,
+                    doneText: 'Terminé'
+                });
+
+                // SCHEDULED DATEPICKER
+
+                $(editScheduledFreeStartDateControl).datepicker({
+                    format: "dd/mm/yyyy",
+                    autoclose: true,
+                    language: "fr"
+                });
+
+                $(editScheduledFreeEndDateControl).datepicker({
+                    format: "dd/mm/yyyy",
+                    autoclose: true,
+                    language: "fr"
+                });
+
+                // FULLCALENDAR
+
+                initializeCalendar(false, 'agendaWeek', new Date());
+
+                // STAFF & Cie CHOSEN
+
+                $('.chosen-select').chosen({
+                    no_results_text: "Aucun résultat !",
+                    placeholder_text_multiple: "Sélectionnez...",
+                    width: "100%"
+                });
+
+                $('#add_task_staff_chosen').addClass('chosen-container-bring-front');
+                $('#edit_task_staff_chosen').addClass('chosen-container-bring-front');
+
+                // AVAILABLE TASKS
+
+                $('#tasks-list').on('click', '.available-task', function () {
+                    $(this).toggleClass('agenda-task-selected');
+                });
+
+                // SELECT ALL TASKS
+
+                $('#selectAllTask').on('click', function (e) {
+                    $('.available-task').each(function (index) {
+                        if ($('#selectAllTask').is(':checked')) {
+                            $(this).addClass('agenda-task-selected');
+                        }
+                        else {
+                            $(this).removeClass('agenda-task-selected');
+                        }
+                    });
+                });
+
+                // CLOSE FOLDER LINK
+
+                $('#available-folders').on('click', '.close-folder-link', function (e) {
+                    e.stopPropagation();
+                    var folder = $(this).data('folder');
+                    var folderName = $(this).data('folder-name');
+                    if (typeof folder != 'undefined' && typeof folderName != 'undefined') {
+                        swal({
+                            title: 'Êtes-vous sûr ?',
+                            text: 'Clôturer le dossier ' + folderName + ' ?',
+                            type: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: 'Non, abandonner',
+                            confirmButtonText: 'Oui, continuer',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                closeFolder(folder, null);
+                            }
+                        });
+                    }
+                });
+
+                $('#available-folders').on('click', '.pagination a', function (e) {
+                    var vars = [], hash;
+                    var  hashes = $(this)[0].search.slice($(this)[0].search.indexOf('?') + 1).split('&');
+                    for (var i = 0; i < hashes.length; i++) {
+                        hash = hashes[i].split('=');
+                        vars.push(hash[0]);
+                        vars[hash[0]] = hash[1];
+                    }
+                    var page = vars['page'];
+                    event.preventDefault();
+
+                    getAvailableFolders(page);
+                });
+
+
+                // ADD SAVE BUTTON
+
+                $('#addSaveButton').on('click', function (e) {
+
+                    if ($('.agenda-task-selected').length == 0) {
+                        toastr.error("Aucune tâche sélectionnée", "Planification");
+                        return;
+                    }
+
+                    if ($('#add_task_staff').val() == '') {
+                        toastr.error("Aucun membre du personnel sélectionné", "Planification");
+                        return;
+                    }
+
+                    var scheduledStartDate = moment($(addScheduledStartDateControl).datepicker('getDate'));
+                    var scheduledStartTime = moment($(addScheduledStartTimeControl).find('input').val(), 'HH:mm');
+                    var scheduledEndDate = moment($(addScheduledEndDateControl).datepicker('getDate'));
+                    var scheduledEndTime = moment($(addScheduledEndTimeControl).find('input').val(), 'HH:mm');
+
+                    var scheduledStartDateTime = scheduledStartDate;
+                    var scheduledEndDateTime = scheduledEndDate;
+
+                    scheduledStartDateTime.hours(scheduledStartTime.hours());
+                    scheduledStartDateTime.minutes(scheduledStartTime.minutes());
+                    scheduledEndDateTime.hours(scheduledEndTime.hours());
+                    scheduledEndDateTime.minutes(scheduledEndTime.minutes());
+
+                    if ($('.agenda-task-selected').length > 0) {
+
+                        var tasks = [];
+                        $('.agenda-task-selected').each(function (index) {
+                            var task = {};
+                            task.id = $(this).data('task');
+                            task.start = scheduledStartDateTime;
+                            task.end = scheduledEndDateTime;
+                            task.title = decodeURI($(this).data('task-title'));
+                            task.comment = $('#add_task_comment').val();
+                            task.fixed = $('#add_task_fixed').val();
+                            task.staff = $('#add_task_staff').val();
+                            task.vehicles = $('#add_task_vehicle').val();
+                            task.materials = $('#add_task_material').val();
+                            task.services = $('#add_task_service').val();
+
+                            tasks.push(task);
+                        });
+
+                        if (tasks.length > 0) {
+                            updateAgendaTasks(tasks, null, 'add');
+                        }
+                    }
+                });
+
+                // EDIT SAVE BUTTON
+
+                $('#editSaveButton').on('click', function (e) {
+
+                    e.preventDefault();
+
+                    if ($('#edit_task_staff').chosen().val() == '') {
+                        toastr.error("Aucun membre du personnel sélectionné", "Planification");
+                        return;
+                    }
+
+                    var taskID = $('#edit-task-modal-content').data('task');
+                    var taskAllDay = $('#edit-task-modal-content').data('allDay');
+                    var missionType = $('#edit-task-modal-content').data('missionType');
+
+                    var tasks = [];
+                    var agendaTask = {};
+
+                    if (taskID > 0) {
+
+                        // UPDATE
+
+                        if (taskAllDay)
+                        {
+                            var scheduledFreeStartDate = moment($(editScheduledFreeStartDateControl).datepicker('getDate'));
+                            var scheduledFreeEndDate = moment($(editScheduledFreeEndDateControl).datepicker('getDate'));
+
+                            agendaTask.id = taskID;
+                            agendaTask.title = $('#edit_task_title').val();
+                            agendaTask.comment = $('#edit_task_comment').val();
+                            agendaTask.start = scheduledFreeStartDate;
+                            agendaTask.end = scheduledFreeEndDate;
+                            agendaTask.day = true;
+                            agendaTask.fixed = false;
+                            agendaTask.title = $('#edit_task_title').val();
+                        }
+                        else
+                        {
+                            var scheduledStartDate = moment($(editScheduledStartDateControl).datepicker('getDate'));
+                            var scheduledStartTime = moment($(editScheduledStartTimeControl).find('input').val(), 'HH:mm');
+                            var scheduledEndDate = moment($(editScheduledEndDateControl).datepicker('getDate'));
+                            var scheduledEndTime = moment($(editScheduledEndTimeControl).find('input').val(), 'HH:mm');
+
+                            var scheduledStartDateTime = scheduledStartDate;
+                            var scheduledEndDateTime = scheduledEndDate;
+
+                            scheduledStartDateTime.hours(scheduledStartTime.hours());
+                            scheduledStartDateTime.minutes(scheduledStartTime.minutes());
+                            scheduledEndDateTime.hours(scheduledEndTime.hours());
+                            scheduledEndDateTime.minutes(scheduledEndTime.minutes());
+
+                            agendaTask.id = taskID;
+                            agendaTask.start = scheduledStartDateTime;
+                            agendaTask.end = scheduledEndDateTime;
+                            agendaTask.day = false;
+                            agendaTask.fixed = $('#edit_task_fixed').val();
+                            agendaTask.title = $('#edit_task_title').val();
+                            agendaTask.comment = $('#edit_task_comment').val();
+                        }
+                    }
+                    else {
+
+                        // ADD
+
+                        if (taskAllDay) {
+
+                            var scheduledFreeStartDate = moment($(editScheduledFreeStartDateControl).datepicker('getDate'));
+                            var scheduledFreeEndDate = moment($(editScheduledFreeEndDateControl).datepicker('getDate'));
+
+                            agendaTask.id = 0;
+                            agendaTask.title = $('#edit_task_title').val();
+                            agendaTask.comment = $('#edit_task_comment').val();
+                            agendaTask.start = scheduledFreeStartDate;
+                            agendaTask.end = scheduledFreeEndDate;
+                            agendaTask.day = true;
+                            agendaTask.fixed = false;
+                        }
+                        else {
+
+                            var scheduledStartDate = moment($(editScheduledStartDateControl).datepicker('getDate'));
+                            var scheduledStartTime = moment($(editScheduledStartTimeControl).find('input').val(), 'HH:mm');
+                            var scheduledEndDate = moment($(editScheduledEndDateControl).datepicker('getDate'));
+                            var scheduledEndTime = moment($(editScheduledEndTimeControl).find('input').val(), 'HH:mm');
+                            var scheduledStartDateTime = scheduledStartDate;
+                            var scheduledEndDateTime = scheduledEndDate;
+
+                            scheduledStartDateTime.hours(scheduledStartTime.hours());
+                            scheduledStartDateTime.minutes(scheduledStartTime.minutes());
+                            scheduledEndDateTime.hours(scheduledEndTime.hours());
+                            scheduledEndDateTime.minutes(scheduledEndTime.minutes());
+
+                            agendaTask.id = 0;
+                            agendaTask.title = $('#edit_task_title').val();
+                            agendaTask.comment = $('#edit_task_comment').val();
+                            agendaTask.start = scheduledStartDateTime;
+                            agendaTask.end = scheduledEndDateTime;
+                            agendaTask.day = false;
+                            agendaTask.fixed = $('#edit_task_fixed').val();
+                        }
+                    }
+
+                    agendaTask.missionType = missionType;
+                    agendaTask.staff = $('#edit_task_staff').chosen().val();
+                    agendaTask.vehicles = $('#edit_task_vehicle').chosen().val();
+                    agendaTask.materials = $('#edit_task_material').val();
+                    agendaTask.services = $('#edit_task_service').val();
+                    tasks.push(agendaTask);
+
+                    updateAgendaTasks(tasks, null, 'edit');
+                });
+
+                // DELETE TASK BUTTON
+
+                $('#deleteTaskButton').on('click', function (e) {
+
+                    e.preventDefault();
+
+                    var taskId = $('#edit-task-modal-content').data('task');
+
+                    if (taskId && taskId > 0) {
+                        swal({
+                            title: 'Êtes-vous sûr ?',
+                            text: 'Supprimer la tâche actuelle ?',
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: 'Non, abandonner',
+                            confirmButtonText: 'Oui, continuer',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                deleteAgendaTask(taskId);
+                            }
+                        });
+                    }
+                    else {
+                        toastr.error("Aucune tâche sélectionnée", "Planification");
+                    }
+                });
+
+                // CLOSE FOLDER BUTTON
+
+                $('#closeFolderButton').on('click', function (e) {
+
+                    e.preventDefault();
+
+                    var folder = $('#addCalendarTaskModal').data('folder');
+
+                    if (typeof folder != 'undefined' && folder > 0) {
+                        swal({
+                            title: 'Êtes-vous sûr ?',
+                            text: 'Clôturer le dossier actuel ?',
+                            type: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: 'Non, abandonner',
+                            confirmButtonText: 'Oui, continuer',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                closeFolder(folder, 'add');
+                            }
+                        });
+                    }
+                });
+
+                /**
+                 *  Get available tasks from the selected folder with AJAX call
+                 */
+                $('#addCalendarTaskModal').on('shown.bs.modal', function (e) {
+
+                    // get current folder id
+                    var relatedTarget = $(e.relatedTarget);
+                    var folder = relatedTarget.data('folder');
+                    var folderName = relatedTarget.data('folder-name');
+                    var today = moment(new Date());
+                    var dropped = false;
+
+                    // check if folder is undefined, in case of folder is not clicked but dropped on the calendar
+                    if (typeof folder === 'undefined') {
+
+                        folder = $('#addCalendarTaskModal').data('folder');
+                        folderName = $('#addCalendarTaskModal').data('folder-name');
+                        today = $('#addCalendarTaskModal').data('date');
+                        dropped = true;
+                    }
+                    else {
+                        $('#addCalendarTaskModal').data('folder', folder);
+                    }
+
+                    $('#addModalWindowTitle').html('Planification du dossier ' + folderName);
+                    $(addScheduledStartDateControl).datepicker('setDate', today.format('DD/MM/YYYY'));
+                    $(addScheduledEndDateControl).datepicker('setDate', today.format('DD/MM/YYYY'));
+
+                    if (!dropped) {
+                        $(addScheduledStartTimeControl).find('input').val(today.startOf('hour').add(1, 'hours').format('HH:mm'));
+                        $(addScheduledEndTimeControl).find('input').val(today.startOf('hour').add(2, 'hours').format('HH:mm'));
+                    }
+                    else {
+                        $(addScheduledStartTimeControl).find('input').val(today.format('HH:mm'));
+                        $(addScheduledEndTimeControl).find('input').val(today.add(2, 'hours').format('HH:mm'));
+                    }
+
+                    $('#add_task_staff').val('').trigger('chosen:updated');
+                    $('#add_task_vehicle').val('').trigger('chosen:updated');
+                    $('#add_task_material').val('').trigger('chosen:updated');
+                    $('#add_task_service').val('').trigger('chosen:updated');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetFolderTasks")',
+                        cache: false,
+                        data: { folderId: folder },
+                        dataType: 'json',
+                        success: function (data) {
+                            renderFolderTasks(data);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            console.error('Failed to retrieve tasks for current folder');
+                        }
+                    });
+
+                    $('#selectAllTask').prop('checked', false);
+                    $('#add_task_fixed').val('false');
+                });
+
+                // SEARCH FORM
+
+                $("#searchForm").submit(function (e) {
+                    e.preventDefault();
+                    getAvailableFolders();
+                });
+
+                // SMALL STAFF MEMBERS
+
+                $('.open-small-staff-members').on('click', function () {
+                    $(this).children().toggleClass('fa-user').toggleClass('fa-times-circle');
+                    $('.small-staff-members-box').toggleClass('active');
+                });
+
+                // SMALL STAFF MEMBERS
+
+                $('.open-small-add-task').on('click', function () {
+                    var date = moment(new Date());
+                    date.startOf('hour').add(1, 'hours');
+                    clearEditEventView();
+                    showEditEventView(null, date);
+                });
+
+                $('#calendar').dblclick(function () {
+                    if (slotDate) {
+                        dblClickFunction(slotDate);
+                    }
+                });
+
+                $('#option_display_view_groupByDateAndResource').change(function (e) {
+
+                    if ($(this).is(":checked")) {
+                        var view = $('#calendar').fullCalendar('getView');
+                        var moment = $('#calendar').fullCalendar('getDate');
+                        $('#calendar').fullCalendar('destroy');
+
+                        initializeCalendar(true, view.name, moment);
+
+                        //$('#calendar').fullCalendar('changeView', view.name);
+                        ////$('#calendar').fullCalendar('render');
+                        //$('#calendar').fullCalendar('gotoDate', moment);
+                    }
+                    else {
+                        $('#calendar').fullCalendar('option', 'groupByDateAndResource', false);
+                    }
+                });
+
+                function initializeCalendar(groupByDateAndResource, view, date) {
+
+                    $('#calendar').fullCalendar({
+                        businessHours: true,
+                        defaultDate: date,
+                        defaultView: view,
+                        droppable: true,
+                        editable: true,
+                        eventColor: '#01DF3A',
+                        groupByDateAndResource: groupByDateAndResource,
+                        eventLimit: true,
+                        height: 715,
+                        nowIndicator: true,
+                        refetchResourcesOnNavigate: false,
+                        resourceLabelText: "Chauffeurs",
+                        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                        scrollTime: '08:00:00',
+                        slotEventOverlap: false,
+                        slotLabelFormat: 'H:mm',
+                        timeFormat: 'H:mm',
+                        theme: false,
+                        header: {
+                            left: 'settings today prev,next',
+                            center: 'title',
+                            right: 'agendaDay,agendaTwoDay,agendaFiveDay,agendaWeek,month,listWeek'
+                        },
+                        views: {
+                            agendaTwoDay: {
+                                type: 'agenda',
+                                duration: { days: 2 }
+                            },
+                            agendaFiveDay: {
+                                type: 'agenda',
+                                duration: { days: 5 }
+                            },
+                            agendaWeek: {
+                                groupByDateAndResource: false
+                            },
+                            month: {
+                                groupByDateAndResource: false
+                            },
+                            listWeek: { buttonText: 'Liste' }
+                        },
+                        customButtons: {
+                            settings: {
+                                text: 'Paramètres',
+                                click: function () {
+                                    $('#settingsView').modal();
+                                }
+                            }
+                        },
+                        resources: resourcesCallback,
+                        dayClick: dayClickCallback,
+                        drop: dropCallback,
+                        events: function (start, end, timezone, callback) {getAgendaTasks(start, end, callback); },
+                        eventClick: eventClickCallback,
+                        eventDrop: eventDropCallback,
+                        eventDragStop: eventDragStopCallback,
+                        eventRender: eventRenderCallback,
+                        eventResize: eventResizeCallback
+                    });
+
+                };
+
+                var slotDate;
+                function dayClickCallback(date, jsEvent, view, resourceObj) {
+                    slotDate = date;
+                    $('#calendar').on('mousemove', forgetSlot);
+                };
+
+                function dropCallback(date, jsEvent, ui, resourceId) {
+                    $('#addCalendarTaskModal').data('folder', $(this).data('folder'));
+                    $('#addCalendarTaskModal').data('folder-name', $(this).data('folder-name'));
+                    $('#addCalendarTaskModal').data('date', date);
+                    $('#addCalendarTaskModal').modal('show');
+                };
+
+                function resourcesCallback(callback) {
+
+                    console.log('resourcesCallback');
+
+                    $.ajax({
+                        url: '@Url.Action("GetDrivers")',
+                        type: 'POST',
+                        data: JSON.stringify({ 'members': getActiveStaffMembers(), 'force': force }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                        success: function (data) {
+
+                            var resources = [];
+                            $.each(data, function (i, r) {
+                                resources.push({
+                                    id: r.id,
+                                    title: r.title,
+                                    initials: r.initials,
+                                    eventColor: r.eventColor,
+                                    firstname: r.firstname
+                                });
+                            })
+                            callback(resources);
+                        }
+                    });
+                };
+
+                function eventClickCallback(calEvent, jsEvent, view) {
+                    clearEditEventView();
+                    showEditEventView(calEvent, null);
+                }
+
+                function eventDragStopCallback(event, jsEvent, ui, view) {
+                    //
+                }
+
+                function eventDropCallback(event, delta, revertFunc, jsEvent, ui, view) {
+                    if (event !== null) {
+                        if (event.missionType == 'CMR' && event.allDay) {
+                            toastr.warning("cette tâche ne peut pas être planifiée quotidiennement", "Planification");
+                            revertFunc();
+                            return;
+                        }
+
+                        swal({
+                            title: 'Êtes-vous sûr ?',
+                            text: 'Mettre à jour la planification de la tâche ?',
+                            type: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: 'Non, abandonner',
+                            confirmButtonText: 'Oui, continuer',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                updateAgendaTaskDuration(event, delta, jsEvent, ui, view);
+                            }
+                            else {
+                                revertFunc();
+                            }
+                        });
+                    }
+                };
+
+                function eventRenderCallback(event, element, view) {
+                    if (event.fixed) {
+                        if (event.end !== null) {
+                            if (event.end.diff(event.start, 'minutes') <= 30) {
+                                element.find('.fc-time').before("<i class='far fa-clock'></i>&nbsp;");
+                            }
+                            else {
+                                element.find('.fc-time').prepend("<i class='far fa-clock'></i>&nbsp;");
+                            }
+                        }
+                    }
+
+                    if (event.missionType !== 'ALL') {
+                        element.qtip({
+                            content: {
+                                text: event.folderName + '<hr style="margin-top: 5px; margin-bottom: 5px; " />' + (event.type == 'PCK' ? 'Enlèvement' : 'Livraison') + '<hr style="margin-top: 5px; margin-bottom: 5px; " />' + event.street1 + '<br/>' + event.zip + ' - ' + event.city + '<hr style="margin-top: 5px; margin-bottom: 5px; " />' + event.folderDescription,
+                                title: event.shortTitle
+                            },
+                            position: {
+                                target: 'mouse', // Track the mouse as the positioning target
+                                adjust: { x: 5, y: 5 } // Offset it slightly from under the mouse
+                            },
+                            show: { solo: true },
+                            style: {
+                                classes: 'qtip-light',
+                                width: 280
+                            }
+                        });
+                    }
+                }
+
+                function eventResizeCallback(event, delta, revertFunc, jsEvent, ui, view) {
+
+                    swal({
+                        title: 'Êtes-vous sûr ?',
+                        text: 'Mettre à jour la planification de la tâche ?',
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        cancelButtonText: 'Non, abandonner',
+                        confirmButtonText: 'Oui, continuer',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.value) {
+                            updateAgendaTaskDuration(event, delta, jsEvent, ui, view);
+                        }
+                        else {
+                            revertFunc();
+                        }
+
+                    });
+                };
+
+                function forgetSlot() {
+                    slotDate = null;
+                    $('#calendar').off('mousemove', forgetSlot);
+                };
+
+                function dblClickFunction(date) {
+                    clearEditEventView();
+                    showEditEventView(null, date);
+                };
+
+                function clearEditEventView() {
+
+                    $('#edit-task-modal-content').data('task', 0);
+                    $('#edit-task-modal-content').data('allDay', false);
+                    $('#edit-task-modal-content').data('missionType', '');
+
+                    $(editScheduledFreeStartDateControl).datepicker('setDate', null);
+                    $(editScheduledFreeEndDateControl).datepicker('setDate', null);
+                    $(editScheduledStartDateControl).datepicker('setDate', null);
+                    $(editScheduledEndDateControl).datepicker('setDate', null);
+                    $(editScheduledStartTimeControl).find('input').val('');
+                    $(editScheduledEndTimeControl).find('input').val('');
+
+                    $('#edit_task_title').val('');
+                    $('#edit_task_comment').val('');
+                    $('#edit_task_staff').val('').trigger('chosen:updated');
+                    $('#edit_task_vehicle').val('').trigger('chosen:updated');
+                    $('#edit_task_material').val('').trigger('chosen:updated');
+                    $('#edit_task_service').val('').trigger('chosen:updated');
+                    $('#edit_task_added_date').html('');
+                    $('#edit_task_modification_date').html('');
+                };
+
+                function showEditEventView(event, date) {
+
+                    if (event == null) {
+
+                        // ADD EVENT
+
+                        var allDay = !date.hasTime();
+
+                        $('#edit-task-modal-content').data('task', 0);
+                        $('#edit-task-modal-content').data('missionType', '');
+                        $('#edit-task-modal-title').html('Planification');
+
+                        if (allDay) {
+
+                            $('#edit-task-modal-content').data('allDay', true);
+
+                            $(editScheduledFreeStartDateControl).datepicker('setDate', moment(date).format('DD/MM/YYYY'));
+                            $(editScheduledFreeEndDateControl).datepicker('setDate', moment(date).add(1, 'days').format('DD/MM/YYYY'));
+
+                            $('#edit_task_fixed').val(false + '');
+                            $('#edit-task-modal-subtitle').html('Permet de planifier une nouvelle tâche quotidienne à l\'agenda');
+
+                            $('#editScheduledStartDateTimeRow').hide();
+                            $('#editScheduledEndDateTimeRow').hide();
+                            $('#editFixedRow').hide();
+                            $('#editScheduledFreeStartDateRow').show();
+                            $('#editScheduledFreeEndDateRow').show();
+                            $('#editTaskTitleRow').show();
+                        }
+                        else {
+
+                            $('#edit-task-modal-content').data('allDay', false);
+
+                            $(editScheduledStartDateControl).datepicker('setDate', moment(date).format('DD/MM/YYYY'));
+                            $(editScheduledEndDateControl).datepicker('setDate', moment(date).format('DD/MM/YYYY'));
+                            $(editScheduledStartTimeControl).find('input').val(moment(date).format('HH:mm'));
+                            $(editScheduledEndTimeControl).find('input').val(moment(date).add(2, 'hours').format('HH:mm'));
+                            $('#edit-task-modal-subtitle').html('Permet de planifier une nouvelle tâche à l\'agenda');
+
+                            $('#editScheduledFreeStartDateRow').hide();
+                            $('#editScheduledFreeEndDateRow').hide();
+                            $('#editScheduledStartDateTimeRow').show();
+                            $('#editScheduledEndDateTimeRow').show();
+                            $('#editTaskTitleRow').show();
+                            $('#editFixedRow').show();
+                        }
+
+                        $('#editTaskAddedDateRow').hide();
+                        $('#editTaskModificationDateRow').hide();
+                        $('#deleteTaskButton').hide();
+
+                        $('#tabFolder').css("display", "none");
+                    }
+                    else {
+
+                        // EDIT EVENT
+
+                        var isCMR = event.missionType == 'CMR';
+                        var title = event.shortTitle != '' ? event.shortTitle : 'Planification';
+                        
+                        $('#tabFolder').css("display", "block");
+
+                        // display folder infos
+
+                        $('#edit_task_folder_name').val(event.folderName);
+                        $('#edit_task_folder_description').val(event.folderDescription);
+                        $('#edit_task_client_name').val(event.clientName);
+                        $('#edit_task_street').val(event.street1);
+                        $('#edit_task_zip').val(event.zip);
+                        $('#edit_task_city').val(event.city);
+                        $('#edit_task_country').val(event.countryName);
+
+                        // display task infos
+
+                        $('#edit-task-modal-content').data('task', event.id);
+                        $('#edit-task-modal-content').data('missionType', event.missionType)
+                        $('#edit-task-modal-title').html(isCMR ? '(' + (event.type == 'PCK' ? 'E' : 'L') + ')' + ' ' + event.folderName + ' - ' + (typeof event.shortTitle != 'undefined' ? event.shortTitle : 'Tâche') : event.shortTitle);
+
+                        if (event.allDay) {
+
+                            $('#edit-task-modal-content').data('allDay', true);
+
+                            $(editScheduledFreeStartDateControl).datepicker('setDate', moment(event.start).format('DD/MM/YYYY'));
+                            $(editScheduledFreeEndDateControl).datepicker('setDate', moment(event.end).format('DD/MM/YYYY'));
+                            $('#edit_task_title').val(event.shortTitle);
+                            $('#edit_task_comment').val(event.comment);
+                            $('#edit-task-modal-subtitle').html('Permet de mettre à jour une tâche quotidienne de l\'agenda.');
+
+                            $('#editScheduledStartDateTimeRow').hide();
+                            $('#editScheduledEndDateTimeRow').hide();
+                            $('#editFixedRow').hide();
+                            $('#editScheduledFreeStartDateRow').show();
+                            $('#editScheduledFreeEndDateRow').show();
+                            $('#editTaskTitleRow').show();
+                        }
+                        else {
+
+                            $('#edit-task-modal-content').data('allDay', false);
+
+                            $(editScheduledStartDateControl).datepicker('setDate', moment(event.start).format('DD/MM/YYYY'));
+                            $(editScheduledEndDateControl).datepicker('setDate', moment(event.end).format('DD/MM/YYYY'));
+                            $(editScheduledStartTimeControl).find('input').val(moment(event.start).format('HH:mm'));
+                            $(editScheduledEndTimeControl).find('input').val(moment(event.end).format('HH:mm'));
+                            $('#edit_task_title').val(event.shortTitle);
+                            $('#edit_task_comment').val(event.comment);
+                            $('#edit-task-modal-subtitle').html('Permet de mettre à jour une tâche de l\'agenda.');
+
+                            $('#editScheduledFreeStartDateRow').hide();
+                            $('#editScheduledFreeEndDateRow').hide();
+                            $('#editFixedRow').show();
+                            $('#editTaskTitleRow').show();
+                            $('#editScheduledStartDateTimeRow').show();
+                            $('#editScheduledEndDateTimeRow').show();
+                        }
+
+                        $('#edit_task_fixed').val((event.fixed + ''));
+                        $('#edit_task_staff').val(event.staff).trigger('chosen:updated');
+                        $('#edit_task_vehicle').val(event.vehicles).trigger('chosen:updated');
+                        $('#edit_task_material').val(event.materials).trigger('chosen:updated');
+                        $('#edit_task_service').val(event.services).trigger('chosen:updated');
+
+                        $('#edit_task_added_date').html(event.addedLabel);
+
+                        if (event.modificationLabel != '') {
+                            $('#edit_task_modification_date').html(event.modificationLabel);
+                        }
+                        else {
+                            $('#edit_task_modification_date').html('Aucune');
+                        }
+
+                        $('#editTaskAddedDateRow').show();
+                        $('#editTaskModificationDateRow').show();
+                        $('#deleteTaskButton').show();
+                    }
+
+                    // active tab-task
+                    $('#tabTask').removeClass('active');
+                    $('#tabFolder').removeClass('active');
+                    $('[href="#tab-task"]').tab('show');
+                    $('#tabTask').addClass('active');
+
+                    $('#editCalendarTaskModal').modal('show');
+                }
+
+
+                $('#testButton').on('click', function (e) {
+                    console.info('groupByDateAndResource');
+                    $('#calendar').fullCalendar('option', 'groupByDateAndResource', true);
+                });
+
+                $('.i-checks.driver-all-check').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+
+                $('.i-checks.driver-all-check').on('ifChanged', function (event) {
+
+                    allowSearch = false;
+
+                    $('.i-checks.driver-check').each(function (index) {
+                        if ($('#selectAllDriver').is(':checked')) {
+                            $(this).iCheck('check');
+                        }
+                        else {
+                            $(this).iCheck('uncheck');
+                        }
+                    });
+
+                    // refetch all task and resources for calendar
+                    $('#calendar').fullCalendar('refetchEvents');
+                    $('#calendar').fullCalendar('refetchResources');
+
+                    allowSearch = true;
+
+                    console.log('check');
+                });
+
+                // Here, create the chexboxes and its container, label, etc.
+                // You can do it using PHP.
+                //var checkboxContainer = $("<span class='checkbox checkbox-primary' style='margin-top: -1px;'><input id='checkBoxView' type='checkbox'><label for='checkBoxView'>Toutes</label></span>");
+
+                // Append it to FullCalendar.
+                //$(".fc-right").append(checkboxContainer);
+
+                // ***************************************************************************************************************************************************
+
+                // LOAD AVAILABLE FOLDERS
+
+                getAvailableFolders();
+
+                // LOAD AVAILABLE STAFF DRIVERS
+
+                getAvailableStaffMembers();
+            });
+
+            function get_agenda_height() {
+                var window_height = $(window).height();
+                var folder_content = $('#folder-content');
+                var calendar_content = $('#calendar-content');
+                var footer_content = $('#footer-content');
+
+                return window_height - folder_content.offset().top - footer_content.height() - 75;
+            };
+
+            // *******************************************************************************************************************************************************
+
+            /* Get available folders with AJAX call */
+            function getAvailableFolders(page) {
+
+                // collects the data from search criteria (fields)
+
+                var searchCriteria = $('#searchCriteria').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetFoldersView")',
+                    data: { criteria: searchCriteria, page: page ? page : 1 },
+                    cache: false,
+                    beforeSend: function () {
+                        $('#available-folders').empty();
+                        $('#navigationContent').children('.ibox-content').toggleClass('sk-loading');
+                    },
+                    success: function (data) {
+                        setTimeout(function () {
+                            $('#navigationContent').children('.ibox-content').toggleClass('sk-loading');
+                            renderAvailableFolders(data);
+                        }, 500);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        toastr.error(thrownError, 'Erreur: ' + xhr.status);
+                        $('#navigationContent').children('.ibox-content').toggleClass('sk-loading');
+                    }
+                });
+            }
+
+            /* Get available and active staff members with AJAX call */
+            function getAvailableStaffMembers() {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetStaffMembers")',
+                    cache: false,
+                    contentType: 'application/json;charset=utf-8',
+                    data: {},
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data != null && data.members != null) {
+                            if (data.members.length > 0) {
+                                renderAvailableStaffMembers(data);
+                            }
+                            $('#staff-members-badge').html(data.members.length);
+                            $('#staff-members-badge').show();
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        toastr.error(thrownError, 'Erreur: ' + xhr.status);
+                    }
+                });
+            }
+
+            /* Get tasks between two dates with AJAX call */
+            function getAgendaTasks(start, end, callback) {
+
+                console.log('getAgendaTasks');
+
+                $.ajax({
+                    url: '@Url.Action("GetAgendaTasks")',
+                    type: 'POST',
+                    data: JSON.stringify({ 'members': getActiveStaffMembers(), 'force': force, 'start': start.unix(), 'end': end.unix() }),
+                    contentType: 'application/json',
+                    dataType: "json",
+                    success: function (data) {
+
+                        var events = [];
+                        $.each(data, function (i, v) {
+
+                            var title = (v.missionType !== 'ALL' ? v.folderName + '\r\n' + v.title : v.title);
+
+                            events.push({
+                                id: v.id,
+                                title: title,
+                                comment: v.comment,
+                                resourceId: v.resourceId,
+                                resourceIds: v.resourceIds,
+                                className: v.className,
+                                start: moment(v.start),
+                                end: moment(v.end),
+                                allDay: v.day,
+                                day: v.day,
+                                fixed: v.fixed,
+                                staff: v.staff,
+                                vehicles: v.vehicles,
+                                materials: v.materials,
+                                services: v.services,
+                                missionType: v.missionType,
+                                addedLabel: v.addedLabel,
+                                modificationLabel: v.modificationLabel,
+                                resourceEditable: false,
+                                folderName: v.folderName,
+                                folderDescription: v.folderDescription,
+                                type: v.type,
+                                street1: v.street1,
+                                zip: v.zip,
+                                city: v.city,
+                                countryCode: v.countryCode,
+                                countryName: v.countryName,
+                                clientName: v.clientName,
+                                shortTitle: v.title
+                            });
+                        });
+                        callback(events);
+                    }
+                });
+            };
+
+            /**
+             *  Render available folders in content
+             */
+            function renderAvailableFolders(data) {
+
+                $('#available-folders').html(data);
+
+                // make each available folder draggable using JQuery UI
+                $('#available-folders .available-folder').each(function () {
+                    $(this).draggable({
+                        zIndex: 10000,
+                        revert: true,
+                        revertDuration: 125,
+                        cursorAt: {
+                            top: -5,
+                            left: 0
+                        }
+                    });
+                });
+            };
+
+            /**
+            *  Render available staff members in content
+            */
+            function renderAvailableStaffMembers(data) {
+
+                var content = "";
+                $.each(data.members, function (idx, member) {
+                    content += '<li><div style="display: inline-block;"><input class="i-checks driver-check" name="driver-check" type="checkbox" value="' + member.ID + '" checked />&nbsp;&nbsp;<i class="fa fa-user" style="color:' + member.Color + ';"></i>&nbsp;&nbsp;' + member.FirstName + '&nbsp;' + member.LastName + ' (' + member.Trigram + ')</div></li> ';
+                });
+
+                $('#staff-list').html(content);
+
+                $('.i-checks.driver-check').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+
+                $('.i-checks.driver-check').on('ifChanged', function (event) {
+
+                    force = true;
+
+                    if (allowSearch) {
+
+                        // refetch all task for calendar
+                        $('#calendar').fullCalendar('refetchEvents');
+
+                        $('#calendar').fullCalendar('refetchResources');
+                    }
+                });
+            };
+
+            /**
+             *  Render available tasks of the selected folder in the modal window
+             */
+            function renderFolderTasks(data) {
+
+                var content = "";
+                $.each(data, function (idx, task) {
+                    content += '<li class="available-task" id=' + task.ID + ' data-task=' + task.ID + ' data-task-title=' + encodeURI(task.Title) + '><div class="agile-detail agenda-folder-title m-b-xs"><span class="pull-right"><div class="agenda-folder-title">' + (task.Type == 'PCK' ? 'E' : 'L') + '</div></span>' + task.Title + '</div><span class="agenda-folder-detail"> ' + task.StreetLine1 + '<br />' + 'B - ' + task.Zip + '&nbsp;' + task.City + '</span></div></li >'
+                });
+
+                if (data.length == 0) {
+                    $('#available-tasks-content').removeClass('task-list-content');
+                }
+
+                $('#tasks-list').html(content);
+            };
+
+            /**
+             *  Update task with AJAX call
+             */
+            function updateAgendaTasks(tasks, view, caller) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateAgendaTasks")',
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    data: JSON.stringify(tasks),
+                    success: function (data) {
+                        if (data == true) {
+
+                            // show success notification
+                            toastr.success('Tâche mise à jour', 'Tâche');
+
+                            if (caller == 'add') {
+
+                                // hide add agenda task modal form
+                                $('#addCalendarTaskModal').modal('hide');
+
+                                // retrieve all available folder
+                                getAvailableFolders();
+                            }
+                            else {
+
+                                // hide edit agenda task modal form
+                                $('#editCalendarTaskModal').modal('hide');
+                            }
+
+                            // refetch all task for calendar
+                            $('#calendar').fullCalendar('refetchEvents');
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        toastr.error(thrownError, 'Erreur: ' + xhr.status)
+                    }
+                });
+            };
+
+            /**
+             *  Update task duration with AJAX call
+             */
+            function updateAgendaTaskDuration(event, delta, jsEvent, ui, view) {
+
+                var task = {};
+                task.id = event.id;
+                task.start = event.start;
+                task.end = event.end;
+                task.day = event.allDay;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateAgendaTaskDuration")',
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    data: JSON.stringify(task),
+                    success: function (data) {
+                        if (data == true) {
+
+                            // show success notification
+                            toastr.success('Tâche mise à jour', 'Tâche');
+
+                            // refetch all task for calendar
+                            $('#calendar').fullCalendar('refetchEvents');
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        toastr.error(thrownError, 'Erreur: ' + xhr.status)
+                    }
+                });
+            };
+
+            /**
+             *  Delete task with AJAX call
+             */
+            function deleteAgendaTask(id) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteAgendaTaskDuration")',
+                    dataType: 'json',
+                    data: {id: id},
+                    success: function (data) {
+                        if (data == true) {
+
+                            // show success notification
+                            toastr.success('Tâche actuelle suppimée', 'Tâche');
+
+                            // hide edit agenda task modal form
+                            $('#editCalendarTaskModal').modal('hide');
+
+                            // refetch all task for calendar
+                            $('#calendar').fullCalendar('refetchEvents');
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        toastr.error(thrownError, 'Erreur: ' + xhr.status)
+                    }
+                });
+            };
+
+            /**
+             *  Close folder with AJAX call
+             */
+            function closeFolder(id, caller) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CloseFolder")',
+                    dataType: 'json',
+                    data: {id: id},
+                    success: function (data) {
+                        if (data == true) {
+
+                            // show success notification
+                            toastr.success('Votre dossier a été clôturé', 'Dossier');
+
+                            if (caller == 'add') {
+
+                                // hide add agenda task modal form
+                                $('#addCalendarTaskModal').modal('hide');
+                            }
+
+                            // retrieve all available folder
+                            getAvailableFolders();
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        toastr.error(thrownError, 'Erreur: ' + xhr.status)
+                    }
+                });
+            }
+
+            function clearCriteria() {
+                $('#searchCriteria').val('');
+                getAvailableFolders();
+            }
+
+            function searchFolder() {
+                getAvailableFolders();
+                return false;
+            }
+
+            function getActiveStaffMembers() {
+                var members = [];
+                $('.driver-check').each(function (index) {
+                    if ($(this).is(':checked')) {
+                        members.push($(this).val());
+                    }
+                });
+
+                return members;
+            };
+
+    </script>
+}

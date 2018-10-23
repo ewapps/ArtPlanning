@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- META -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Your description" />
+    <meta name="keywords" content="Your keywords" />
+    <meta name="author" content="EWAPPS S.A." />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- LINK -->
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+
+    <title>ART SHIPPERS | @ViewBag.Title</title>
+
+    <!-- PRIMARY STYLE -->
+    @Styles.Render("~/toastr/css")
+    @Styles.Render("~/swal/css")
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/font-awesome/css")
+
+
+    <!-- LOCAL STYLE -->
+    @if (IsSectionDefined("Styles"))
+    {@RenderSection("Styles", required: false)}
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+</head>
+<body class="fixed-sidebar">
+
+    <!-- WRAPPER -->
+    <div id="wrapper">
+        <!-- NAVIGATION -->
+        @Html.Partial("_AS_Navigation")
+        <!-- PAGE WRAPPER -->
+        <div id="page-wrapper" class="gray-bg">
+            <!-- TOP NAVIGATION BAR -->
+            @Html.Partial("_AS_TopNavbar")
+            <!-- BREADCUMB -->
+            @Html.Partial("_AS_BreadCrumb")
+            <!-- MAIN CONTENT VIEW  -->
+            @RenderBody()
+            <!-- FOOTER -->
+            @*@Html.Partial("_AS_Footer")*@
+        </div>
+        <!-- END WRAPPER -->
+    </div>
+
+    <!-- SECTION FOR MAIN SCRIPTS RENDER -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/slimscroll")
+    @Scripts.Render("~/bundles/inspinia")
+    @Scripts.Render("~/bundles/toastr")
+    @Scripts.Render("~/bundles/extensions")
+    @Scripts.Render("~/bundles/ewappssessiontimeout")
+    @Scripts.Render("~/bundles/swal")
+
+    <script type="text/javascript">
+        initPendingTraductions("Attention, vous n'êtes plus actif.", "Vous êtes resté inactif, votre session va expirer dans #1", "Maintenez-moi connecté");
+        initRedirectTraductions("Attention, vous n'êtes plus actif.", "Vous êtes resté inactif, votre session a expiré !", "Retour à l'identification");
+        initTimeoutValues(@HttpContext.Current.Session.Timeout, "@Url.Action("KeepAlive", "Authentication")", "@Url.Action("LogOff", "Authentication")");
+    </script>
+
+    <!-- HANDLER FOR LOCAL SCRIPTS -->
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

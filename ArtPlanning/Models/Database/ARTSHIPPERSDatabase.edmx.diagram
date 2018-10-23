@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="64f8c5dbb58c40929f051e32e21a8145" Name="Diagram1" ShowGrid="true">
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.address" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.folder" Width="1.5" PointX="1.5" PointY="9.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.language" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.material" Width="1.5" PointX="3" PointY="7.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.mission" Width="1.5" PointX="0.75" PointY="8.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.mission_type" Width="1.5" PointX="1.5" PointY="10.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.service" Width="1.5" PointX="3" PointY="1" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.task_material" Width="1.5" PointX="5.25" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.task_service" Width="1.5" PointX="5.25" PointY="4.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.task_service_type" Width="1.5" PointX="3" PointY="11.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.task_staff" Width="1.5" PointX="8.25" PointY="4.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.task_type" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.task_vehicle" Width="1.5" PointX="5.25" PointY="6.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.translate_material" Width="1.5" PointX="5.25" PointY="8" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.translate_service" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.translate_task_type" Width="1.5" PointX="3" PointY="2.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.translate_vehicle" Width="1.5" PointX="5.25" PointY="11.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.vehicle" Width="1.5" PointX="3.375" PointY="16" IsExpanded="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_mission_folder" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_translate_material_language" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_translate_service_language" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_translate_task_type_language" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_translate_vehicle_language" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_material_material" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_translate_material_material" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_mission_mission_type" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_service_service" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_translate_service_service" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_service_task_service_type" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_translate_task_type_task_type" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_vehicle_vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_translate_vehicle_vehicle" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.AspNetUsers" Width="1.5" PointX="3" PointY="13.125" IsExpanded="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_AspNetUsers_language" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_service_AspNetUsers" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_staff_staff" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.task" Width="1.5" PointX="3" PointY="4.5" IsExpanded="false" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_address" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_mission" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_material_task" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_service_task" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_staff_task" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_task_type" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_task_vehicle_task" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.warehouse" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ArtPlanning.Models.Database.country" Width="1.5" PointX="0.75" PointY="12.375" />
+        <AssociationConnector Association="ArtPlanning.Models.Database.FK_address_country" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

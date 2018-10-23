@@ -1,0 +1,276 @@
+﻿@using ArtPlanning.ViewModels;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<UserViewModel>
+
+@{
+    ViewBag.Title = "Gestion des utilisateurs";
+    ViewBag.MenuSelected = ViewBag.Title.ToUpper();
+    ViewBag.BreadCrumb = "<li>Gestion des utilisateurs</li><li class=\"active\"><strong>Liste</strong></li>";
+    ViewBag.SubTitle = "Liste des utilisateurs";
+    ViewBag.Message = "Gérer les utilisateurs.";
+
+    string currentSort = ViewBag.CurrentSort;
+    if (string.IsNullOrEmpty(currentSort))
+    {
+        currentSort = "last_name";
+    }
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <!-- TITLE & MESSAGE -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content text-center p-md">
+                    <h2>@ViewBag.SubTitle</h2>
+                    <p>@ViewBag.Message</p>
+                    <a class="btn btn-w-m btn-primary" href="@Url.Action("Edit", "Users", new { id = "" })"><i class="fas fa-plus" aria-hidden="true"></i><span>Créer un nouvel utilisateur</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox collapsed" id="iboxSearch">
+                <div class="ibox-title collapse-link">
+                    <h5>Recherche</h5>
+                    <div class="ibox-tools">
+                        <i class="fas fa-chevron-up pointer" id="chevronSearch"></i>
+                    </div>
+                </div>
+                <div class="ibox-content text-center p-md">
+                    @using (Html.BeginForm("Index", "Users", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "searchForm" }))
+                        {
+                            
+                                @Html.AntiForgeryToken()
+
+                                <input type="submit" style="display: none;" />
+                                <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.CurrentSort" style="display: none" />
+                                <input type="hidden" id="page" name="page" value="@ViewBag.Page" style="display: none" />
+                                <input type="hidden" id="pageSize" name="pageSize" value="@ViewBag.PageSize" style="display: none" />
+                                <input type="hidden" id="forceFirstPage" name="forceFirstPage" value="@ViewBag.ForceFirstPage" style="display: none" />
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Nom</label>
+                                    <div class="col-sm-10">@Html.TextBox("searchLastName", (string)ViewBag.searchLastName, new { @class = "form-control" })</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Prénom</label>
+                                    <div class="col-sm-10">@Html.TextBox("searchFirstName", (string)ViewBag.searchFirstName, new { @class = "form-control" })</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Courrier électronique</label>
+                                    <div class="col-sm-10">@Html.TextBox("searchMail", (string)ViewBag.searchEmail, new { @class = "form-control" })</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Statut</label>
+                                    <div class="col-sm-10">
+                                        <select id="searchStatus" name="searchStatus" class="form-control" style="width:100%;">
+                                            <option value="" @((ViewBag.searchStatus == "") ? "selected" : "")></option>
+                                            <option value="true" @((ViewBag.searchStatus == "true") ? "selected" : "")>Actif</option>
+                                            <option value="false" @((ViewBag.searchStatus == "false") ? "selected" : "")>D&#233;sactiv&#233;</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12 pull-right text-right">
+                                        <a class="btn btn-white" href="javascript:clearFilter();"><i class="fas fa-reply"></i><span>Réinitialiser les filtres</span></a>
+                                        <a class="btn btn-primary" href="javascript:document.getElementById('searchForm').submit()"><i class="fas fa-search"></i><span>Filtrer</span></a>
+                                    </div>
+                                </div>
+                        }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content text-center p-md">
+                    <div class="ewapps-grid">
+                        <table>
+                            <!-- HEADER -->
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <a class="sortActionLink" style="width:100%;" data-sort="@ViewBag.LastNameSortParam">Nom</a>
+                                        @Html.SortIdentifier(currentSort, "last_name")
+                                    </th>
+                                    <th>
+                                        <a class="sortActionLink" data-sort="@ViewBag.FirstNameSortParam">Prénom</a>
+                                        @Html.SortIdentifier(currentSort, "first_name")
+                                    </th>
+                                    <th>
+                                        <a class="sortActionLink" data-sort="@ViewBag.MailSortParam">Courrier électronique</a>
+                                        @Html.SortIdentifier(currentSort, "mail")
+                                    </th>
+                                    <th style="width: 100px;">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <!-- FOOTER -->
+                            <tfoot>
+                                <tr class="ewapps-pager">
+                                    <td colspan="4">
+                                        <div class="NextPrevAndNumeric">
+                                            <div class="ajaxStatus">
+                                                <div style="display:none;">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                            <div class="ewapps-wrap">
+                                                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
+                                            </div>
+                                            <div class="ewapps-wrap rgAdvPart">
+                                                <span class="rgPagerLabel">Eléments par page:</span>
+                                                <select class="form-control" id="selectPageSize">
+                                                    <option value="1" @((ViewBag.pageSize == 1) ? "selected" : "")>1</option>
+                                                    <option value="10" @((ViewBag.pageSize == 10) ? "selected" : "")>10</option>
+                                                    <option value="50" @((ViewBag.pageSize == 50) ? "selected" : "")>50</option>
+                                                    <option value="100" @((ViewBag.pageSize == 100) ? "selected" : "")>100</option>
+                                                </select>
+                                            </div>
+                                            <div class="ewapps-wrap rgInfoPart">
+                                                &nbsp;<strong>@ViewBag.NumberItems</strong> élément(s) dans <strong>@Model.PageCount</strong> page(s)
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => user.LastName)</td>
+                                        <td>@Html.DisplayFor(modelItem => user.FirstName)</td>
+                                        <td>@Html.DisplayFor(modelItem => user.Mail)</td>
+                                        <td class="action-button-container">
+
+                                            <!-- ACTIVE -->
+
+                                            @if (user.Active.HasValue && user.Active.Value == true)
+                                            {
+                                                <button type="button" id="activeUserButton-@user.ID" data-id="@user.ID" onclick="activeUser(false, '@user.ID')" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Cliquer pour désactiver cet utilisateur" class="btn btn-primary btn-circle"><i class='fas fa-check'></i></button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" id="activeUserButton-@user.ID" data-id="@user.ID" onclick="activeUser(true, '@user.ID')" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Cliquer pour activer cet utilisateur" class="btn btn-danger btn-circle"><i class='fas fa-times'></i></button>
+                                            }
+
+                                            <!-- EDIT -->
+
+                                            <button type="button" onclick="location.href='@Url.Action("Edit", "Users", new { id = user.ID })'" data-toggle="tooltip" data-placement="auto" title="" data-html="true" data-original-title="Cliquez pour mettre à jour cet utilisateur" class="btn btn-success btn-circle"><i class="fas fa-pencil-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+    $(function () {
+
+        $('.wrapper').tooltip({
+            selector: "[data-toggle=tooltip]",
+            container: "body",
+            trigger: "hover"
+        });
+
+        $('a.sortActionLink').click(function (e) {
+            $("#sortOrder").val($(this).data("sort"));
+            document.getElementById('searchForm').submit();
+        });
+
+        // Change page size
+        $('#selectPageSize').on('change', function (e) {
+            $("#pageSize").val($(this).val());
+            document.getElementById('searchForm').submit();
+        });
+
+        // Change page
+        $('.pagination a').click(function (e) {
+            e.preventDefault();
+            var url = ($(this).attr('href'));
+            var page = getURLParameter(url, 'page');
+            $("#page").val(page);
+            document.getElementById('searchForm').submit();
+        });
+        });
+
+    function getURLParameter(url, name) {
+        return (RegExp(name + '=' + '(.+?)(&|$)').exec(url) || [, null])[1];
+    }
+
+    function activeUser(enable, id) {
+
+        swal({
+            title: 'Êtes-vous sûr ?',
+            text: (enable == false ? 'Désactiver cet utilisateur ?' : 'Activer cet utilisateur ?'),
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            cancelButtonText: 'Non, abandonner',
+            confirmButtonText: 'Oui, continuer',
+            reverseButtons: true
+        }).then((result) => {
+
+            if (result.value) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SwitchUserActiveStatus")',
+                    cache: false,
+                    data: { id: id },
+                    dataType: 'json',
+                    success: function (response) {
+
+                        var button = "#activeUserButton-" + id;
+
+                        if (enable) {
+                            $(button).switchClass("btn-danger", "btn-primary");
+                            $(button).find('svg').attr('data-icon', 'check');
+                            $(button).attr({
+                                "title": "Cliquer pour désactiver cet utilisateur",
+                                "data-original-title": "Cliquer pour désactiver cet utilisateur",
+                                "onclick": "activeUser(false, '" + id + "')"
+                            });
+                        }
+                        else {
+                            $(button).switchClass("btn-primary", "btn-danger");
+                            $(button).find('svg').attr('data-icon', 'times');
+                            $(button).attr({
+                                "title": "Cliquer pour activer cet utilisateur",
+                                "data-original-title": "Cliquer pour activer cet utilisateur",
+                                "onclick": "activeUser(true, '" + id + "')"
+                            });
+                        }
+
+                        swal({
+                            title: (enable == false ? "Désactivé" : "Activé"),
+                            text: (enable == false ? 'L\'utilisateur a été désactivé' : 'L\'utilisateur a été activé'),
+                            timer: 1500,
+                            type: 'success'
+                        });
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        console.error('Failed to activate user');
+                    }
+                });
+
+            }
+        });
+    }
+
+    </script>
+}

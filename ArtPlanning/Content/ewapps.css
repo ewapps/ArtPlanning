@@ -1,0 +1,376 @@
+﻿/*.sidebar-collapse {
+    overflow: hidden;
+    width: auto;
+    height: 100%;
+}*/
+/* TURN VALIDATION FORM ALERT TO BOLD */
+.help-block {
+    font-weight: 700;
+}
+
+.nav-label {
+    margin-left: 5px;
+}
+.btn span {
+    margin-left: 8px;
+}
+
+/*********************************/
+/* Loading overlay for ajax */
+/*********************************/
+#loadingOverlay {
+    display: none;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    opacity: 0.6;
+    filter: alpha(opacity=60); /* For IE8 and earlier */
+    background: url('/Content/images/Loading_icon.gif') 50% 50% no-repeat rgb(0,0,0); /* rgba(0,0,0, 0.4);*/
+}
+/*********************************/
+/* Ewapps Grid for list*/
+/*********************************/
+.ewapps-grid {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #676a6c;
+    background-color: #fff;
+    font-family: Verdana;
+    font-size: medium;
+}
+.ewapps-grid table {
+    width: 100%;
+    table-layout: auto;
+    empty-cells: show;
+    border-collapse: collapse; /*separate*/
+    border-spacing: 0;
+}
+.ewapps-grid table thead {
+    font-size: medium;
+}
+.ewapps-grid th {
+    color: #676a6c;
+    background-color: #f5f5f5;
+    background: #f5f5f5;
+    border: 0;
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    height: 2.3em;
+    padding-top: 5px;
+    padding-bottom: 4px;
+    padding-left: 7px;
+    padding-right: 7px;
+    text-align: left;
+    /*font-weight: normal;*/
+    cursor: default;
+}
+.ewapps-grid th a {
+    color: #337ab7; /*#676a6c;*/ 
+    text-decoration: none;
+}
+.ewapps-grid th a:focus, .ewapps-grid th a:hover {
+    color: #23527c; /*#676a6c;*/
+    text-decoration: none;
+}
+/* Normal TD */
+.ewapps-grid tbody td {
+    padding: 9px 7px;
+    border-style: solid;
+    border-width: 0 0 1px 1px;
+    border-color: #ddd;
+    text-align: left;
+    color: #676a6c;
+} /* Normal TD */
+.ewapps-grid tbody tr:nth-child(odd) {
+    background-color: #fff;
+    color: #676a6c;
+} /* Alternate TD */
+.ewapps-grid tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+    color: #676a6c;
+} /* Button (modify, activate, delete, ... */
+.ewapps-grid .btn {
+    margin: 0;
+    font-size: 15px;
+    line-height: 16px;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+.ewapps-grid tbody .action-button-container {
+    text-align: center;
+}
+
+/*********************************/
+/* Grid Pager */
+/*********************************/
+.ewapps-grid .ewapps-pager td {
+    color: #676a6c;
+    background: #f5f5f5;
+    border-color: #ddd;
+    padding: 4px 10px;
+    border-style: solid;
+    border-width: 1px 0 0;
+}
+
+.ewapps-grid .ewapps-pager .NextPrevAndNumeric {
+    margin-top: 10px;
+}
+
+.ewapps-grid .ewapps-pager .ajaxStatus {
+    width: 3.36em;
+    background-color: #f5f5f5;
+    border-right: 0 none;
+    float: left;
+}
+
+.ewapps-grid .ewapps-pager .ewapps-wrap {
+    float: left;
+    white-space: nowrap;
+}
+
+.ewapps-grid .ewapps-pager .rgActionButton {
+    padding: 4px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    vertical-align: middle;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background: none transparent;
+    background-color: #fff;
+    font: inherit;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    box-sizing: content-box;
+    margin: 0;
+    width: 26px;
+    border: 0 none;
+    border-width: 1px;
+    border-left-width: 0;
+    border-style: solid;
+    border-color: #ccc;
+    color: #676a6c;
+}
+
+.ewapps-grid .ewapps-pager .rgActionButton:hover {
+    border-color: #adadad;
+    color: #676a6c;
+    background-color: #e6e6e6;
+}
+
+.ewapps-grid .ewapps-pager .rgPageFirst {
+    border-radius: .285714286em 0 0 .285714286em;
+    border-left-width: 1px;
+}
+
+.ewapps-grid .ewapps-pager .rgPagePrev {
+}
+
+.ewapps-grid .ewapps-pager .rgPageLast {
+    border-radius: 0 .285714286em .285714286em 0;
+}
+
+.ewapps-grid .ewapps-pager .rgNumPart a {
+    display: inline-block;
+    text-decoration: none;
+    border: 1px solid transparent;
+    vertical-align: middle;
+    padding: 4px 6px;
+    border-width: 1px;
+    border-style: solid;
+    box-sizing: content-box;
+    border-color: #ccc;
+    color: #676a6c;
+    background-color: #fff;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin: 0;
+    width: 1.42857em;
+    border-left-width: 0;
+    border-radius: 0;
+    text-align: center;
+}
+
+.ewapps-grid .ewapps-pager .rgNumPart a.rgCurrentPage {
+    border-color: #2e6da4;
+    color: #fff;
+    background-color: #337ab7;
+    cursor: default;
+}
+
+.ewapps-grid .ewapps-pager .rgAdvPart {
+    padding: 0 10px;
+}
+
+.ewapps-grid .ewapps-pager .rgPagerLabel {
+    margin: 0 2px 0 0;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.ewapps-grid .ewapps-pager select {
+    display: inline-block;
+    width: 7em;
+}
+
+.ewapps-grid .ewapps-pager .rgInfoPart {
+    float: right;
+    height: 34px;
+    vertical-align: middle;
+    line-height: 34px;
+}
+
+/*********************************/
+/* FORMS */
+/*********************************/
+.control-value {
+    padding-top: 7px;
+    text-align: left;
+    margin-bottom: 0px;
+}
+.has-error .control-label {
+    color: #a94442;
+}
+
+/*/*********************************/
+/* OTHERS */
+/*********************************/
+.tabs-container {
+    /*margin-left: 15px;
+    margin-right: 15px;*/
+    margin-bottom: 25px;
+}
+
+.tabs-container .panel-body .ibox {
+    margin-bottom: 0 !important;
+}
+
+.profile-element img {
+    max-height:80px;
+    max-width: 80px;
+}
+
+/**********************************/
+/* WIZARD */
+/*********************************/
+.wizard > .content > .body {
+    position: relative !important;
+}
+
+/**********************************/
+/* TOUCHSPIN */
+/*********************************/
+.bootstrap-touchspin-down {
+    margin-bottom: 0px !important;
+}
+.bootstrap-touchspin-up {
+    margin-bottom: 0px !important;
+}
+
+/**********************************/
+/* FULLCALENDAR */
+/*********************************/
+.fc-today {
+    /*background: #63e8cc !important;*/
+    /*background: #F3F3F4 !important;*/
+}
+
+
+.fc-header-title h2 {
+    font-family: Calibri;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: inherit !important;
+}
+
+/*.fc-content .fc-widget-header,
+.fc-content .fc-widget-content {
+    border-color: #e7eaec !important;
+    font-weight: normal !important;
+}*/
+
+.fc-border-separate tbody {
+    background-color: #F8F8F8 !important;
+}
+
+.fc-state-highlight {
+    background: none repeat scroll 0 0 #FCF8E3 !important;
+}
+
+.external-event {
+    padding: 5px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.fc-ltr .fc-event-hori.fc-event-end,
+.fc-rtl .fc-event-hori.fc-event-start {
+    border-radius: 2px;
+}
+
+.fc-event,
+.fc-agenda .fc-event-time,
+.fc-event a {
+    /*padding: 4px 6px !important;*/
+    /*background-color: #1ab394 !important;*/
+    /* background color */
+    /*border-color: #1ab394 !important;*/
+    /* border color */
+}
+
+/* ERROR & LOGIN & LOCKSCREEN*/
+
+.logo-name {
+    color: #E6E6E6;
+    font-size: 180px;
+    font-weight: 800;
+    letter-spacing: -5px;
+    margin-bottom: 0;
+    /*#E6E6E6; #1AB394*/
+}
+
+/*.fc-event-time,
+.fc-event-title {
+    color: #717171 !important;
+    padding: 0 1px !important;
+}*/
+
+.ui-calendar .fc-event-time,
+.ui-calendar .fc-event-title {
+    color: #fff !important;
+}
+
+.pointer {
+    cursor:pointer;
+}
+
+.tooltip-inner {
+    font-family: Calibri;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.clockpicker-popover {
+    z-index: 999999 !important;
+}
+
+.grid-sort-order-right {
+    float: right;
+    padding-top: 3px;
+}
+
+.toast-top-center {
+    top: 10px;
+    right: 0;
+    width: 100%
+}
+
+
+.swal2-popup { 
+    font-size: 1.40rem;
+}

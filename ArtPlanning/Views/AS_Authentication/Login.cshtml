@@ -1,0 +1,73 @@
+﻿@using ArtPlanning.Models
+@model LoginViewModel
+
+@{
+    ViewBag.Title = "Connexion";
+}
+
+@section Styles
+{
+    @Styles.Render("~/awesomecheckbox/css")
+}
+
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name" style="font-size: 50px;">Art Planning</h1>
+        </div>
+
+        <h3>@ViewBag.Title</h3>
+        <p>Bienvenue dans Art Planning</p>
+
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Authentication", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form", role = "form", id = "loginForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="m-t">
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @maxlength = "255", @placeholder = "username@domain.ext", @autocomplete = "current-username" })
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                    <div class="form-group">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @maxlength = "255", @placeholder = "mot de passe", @autocomplete = "current-password" })
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                    @*<div class="form-group">
+                        <div class="checkbox checkbox-primary text-left">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary block full-width m-b submit"><i class="fas fa-user-circle"></i>&nbsp;Authentification</button>
+                    </div>
+                </div>
+            }
+        </section>
+        @*<p class="text-left"><small>@Html.ActionLink("Mot de passe oublié ?", "ForgotPassword")</small></p>*@
+        <p class="m-t"> <small><a href="http://www.ewapps.com" target="_blank">EWAPPS S.A. &copy; @DateTime.Now.Year</a></small> </p>
+    </div>
+</div>
+
+@section scripts {
+
+    @Scripts.Render("~/bundles/validate")
+
+    <script>
+
+        $(function () {
+
+            var result = '@ViewBag.ResultType';
+            switch (result) {
+                case 'ERROR':
+                    toastr.error('@ViewBag.ResultMsg', '@ViewBag.ResultType');
+                    break;
+                case 'OK':
+                    toastr.success('@ViewBag.ResultMsg', '@ViewBag.ResultType');
+                    break;
+            }
+        });
+
+    </script>
+}

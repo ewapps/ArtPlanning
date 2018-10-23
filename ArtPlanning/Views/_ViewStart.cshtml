@@ -1,0 +1,17 @@
+﻿@{
+    // get current controller name
+    var controller = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString();
+    string layout;
+
+    switch (controller.ToLower())
+    {
+        case "as_authentication":
+            layout = "~/Views/Shared/AS_AuthenticationLayout.cshtml";
+            break;
+        default:
+            layout = "~/Views/Shared/AS_Layout.cshtml";
+            break;
+    }
+
+    Layout = layout;
+}

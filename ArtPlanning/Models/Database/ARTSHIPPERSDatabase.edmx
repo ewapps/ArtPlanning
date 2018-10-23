@@ -1,0 +1,1879 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ArtPlanning.Models.Database.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="address">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="country_id" Type="int" Nullable="false" />
+          <Property Name="street_line1" Type="nvarchar" MaxLength="255" />
+          <Property Name="street_line2" Type="nvarchar" MaxLength="255" />
+          <Property Name="number" Type="nvarchar" MaxLength="10" />
+          <Property Name="box" Type="nvarchar" MaxLength="10" />
+          <Property Name="zip" Type="nvarchar" MaxLength="10" />
+          <Property Name="city" Type="nvarchar" MaxLength="50" />
+          <Property Name="latitude" Type="float" />
+          <Property Name="longitude" Type="float" />
+          <Property Name="external_ref" Type="nvarchar" MaxLength="10" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="last_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="first_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="language_id" Type="int" Nullable="false" />
+          <Property Name="birth_date" Type="date" />
+          <Property Name="last_connection_date" Type="datetime" />
+          <Property Name="active" Type="bit" />
+          <Property Name="color" Type="nvarchar" MaxLength="9" />
+          <Property Name="initials" Type="nvarchar" MaxLength="3" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="country">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" />
+          <Property Name="member_of_eu" Type="int" />
+          <Property Name="member_of_un" Type="int" />
+          <Property Name="official" Type="int" />
+          <Property Name="active" Type="bit" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="folder">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="client_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" />
+          <Property Name="description" Type="nvarchar" MaxLength="250" />
+          <Property Name="customer_name" Type="nvarchar" MaxLength="250" />
+          <Property Name="customer_phone" Type="varchar" MaxLength="25" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="closed" Type="bit" />
+          <Property Name="closed_date" Type="datetime" />
+          <Property Name="closed_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="language">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="short_name" Type="nvarchar" MaxLength="2" />
+          <Property Name="charset" Type="nvarchar" MaxLength="50" />
+          <Property Name="sort_order" Type="int" />
+          <Property Name="displayed" Type="bit" />
+        </EntityType>
+        <EntityType Name="material">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="mission">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="folder_id" Type="int" />
+          <Property Name="mission_type_id" Type="int" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" />
+          <Property Name="description" Type="nvarchar" MaxLength="250" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="mission_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="service">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="task">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="mission_id" Type="int" Nullable="false" />
+          <Property Name="task_type_id" Type="int" />
+          <Property Name="address_id" Type="int" />
+          <Property Name="title" Type="nvarchar" MaxLength="50" />
+          <Property Name="description" Type="nvarchar" MaxLength="250" />
+          <Property Name="scheduled_start_date" Type="datetime" />
+          <Property Name="scheduled_end_date" Type="datetime" />
+          <Property Name="arrival_date" Type="datetime" />
+          <Property Name="departure_date" Type="datetime" />
+          <Property Name="arrival_mileage" Type="int" />
+          <Property Name="departure_mileage" Type="int" />
+          <Property Name="day" Type="bit" />
+          <Property Name="fixed" Type="bit" />
+          <Property Name="comment" Type="nvarchar" MaxLength="250" />
+          <Property Name="report" Type="nvarchar" MaxLength="250" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="sql_modified" Type="bit" />
+          <Property Name="sql_deleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="task_material">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="task_id" Type="int" Nullable="false" />
+          <Property Name="material_id" Type="int" Nullable="false" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="task_service">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="task_id" Type="int" Nullable="false" />
+          <Property Name="service_id" Type="int" Nullable="false" />
+          <Property Name="service_type_id" Type="int" Nullable="false" />
+          <Property Name="driver_id" Type="nvarchar" MaxLength="128" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="task_service_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="task_staff">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="task_id" Type="int" Nullable="false" />
+          <Property Name="driver_id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="comment" Type="nvarchar" MaxLength="250" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="task_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="displayed" Type="bit" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="task_vehicle">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="task_id" Type="int" Nullable="false" />
+          <Property Name="vehicle_id" Type="int" Nullable="false" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="translate_material">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="language_id" Type="int" Nullable="false" />
+          <Property Name="material_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="250" />
+          <Property Name="description" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="translate_service">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="language_id" Type="int" Nullable="false" />
+          <Property Name="service_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="250" />
+          <Property Name="description" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="translate_task_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="language_id" Type="int" Nullable="false" />
+          <Property Name="task_type_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="250" />
+          <Property Name="description" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="translate_vehicle">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="language_id" Type="int" Nullable="false" />
+          <Property Name="vehicle_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="250" />
+          <Property Name="description" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="vehicle">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="warehouse">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="parent_id" Type="nvarchar" MaxLength="128" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="position" Type="smallint" Nullable="false" />
+          <Property Name="added_date" Type="datetime" />
+          <Property Name="added_user" Type="nvarchar" MaxLength="128" />
+          <Property Name="modification_date" Type="datetime" />
+          <Property Name="modification_user" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <Association Name="FK_address_country">
+          <End Role="country" Type="Self.country" Multiplicity="1" />
+          <End Role="address" Type="Self.address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="country">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="address">
+              <PropertyRef Name="country_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mission_folder">
+          <End Role="folder" Type="Self.folder" Multiplicity="0..1" />
+          <End Role="mission" Type="Self.mission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="folder">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="mission">
+              <PropertyRef Name="folder_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mission_mission_type">
+          <End Role="mission_type" Type="Self.mission_type" Multiplicity="0..1" />
+          <End Role="mission" Type="Self.mission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mission_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="mission">
+              <PropertyRef Name="mission_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_address">
+          <End Role="address" Type="Self.address" Multiplicity="0..1" />
+          <End Role="task" Type="Self.task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="address">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task">
+              <PropertyRef Name="address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_material_material">
+          <End Role="material" Type="Self.material" Multiplicity="1" />
+          <End Role="task_material" Type="Self.task_material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="material">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_material">
+              <PropertyRef Name="material_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_material_task">
+          <End Role="task" Type="Self.task" Multiplicity="1" />
+          <End Role="task_material" Type="Self.task_material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_material">
+              <PropertyRef Name="task_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_mission">
+          <End Role="mission" Type="Self.mission" Multiplicity="1" />
+          <End Role="task" Type="Self.task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mission">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task">
+              <PropertyRef Name="mission_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_service_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="task_service" Type="Self.task_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="task_service">
+              <PropertyRef Name="driver_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_service_service">
+          <End Role="service" Type="Self.service" Multiplicity="1" />
+          <End Role="task_service" Type="Self.task_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_service">
+              <PropertyRef Name="service_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_service_task">
+          <End Role="task" Type="Self.task" Multiplicity="1" />
+          <End Role="task_service" Type="Self.task_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_service">
+              <PropertyRef Name="task_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_service_task_service_type">
+          <End Role="task_service_type" Type="Self.task_service_type" Multiplicity="1" />
+          <End Role="task_service" Type="Self.task_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task_service_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_service">
+              <PropertyRef Name="service_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_staff_staff">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="task_staff" Type="Self.task_staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="task_staff">
+              <PropertyRef Name="driver_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_staff_task">
+          <End Role="task" Type="Self.task" Multiplicity="1" />
+          <End Role="task_staff" Type="Self.task_staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_staff">
+              <PropertyRef Name="task_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_task_type">
+          <End Role="task_type" Type="Self.task_type" Multiplicity="0..1" />
+          <End Role="task" Type="Self.task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task">
+              <PropertyRef Name="task_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_vehicle_task">
+          <End Role="task" Type="Self.task" Multiplicity="1" />
+          <End Role="task_vehicle" Type="Self.task_vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_vehicle">
+              <PropertyRef Name="task_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_vehicle_vehicle">
+          <End Role="vehicle" Type="Self.vehicle" Multiplicity="1" />
+          <End Role="task_vehicle" Type="Self.task_vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehicle">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_vehicle">
+              <PropertyRef Name="vehicle_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_material_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="translate_material" Type="Self.translate_material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_material">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_material_material">
+          <End Role="material" Type="Self.material" Multiplicity="1" />
+          <End Role="translate_material" Type="Self.translate_material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="material">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_material">
+              <PropertyRef Name="material_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_service_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="translate_service" Type="Self.translate_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_service">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_service_service">
+          <End Role="service" Type="Self.service" Multiplicity="1" />
+          <End Role="translate_service" Type="Self.translate_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_service">
+              <PropertyRef Name="service_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_task_type_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="translate_task_type" Type="Self.translate_task_type" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_task_type">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_task_type_task_type">
+          <End Role="task_type" Type="Self.task_type" Multiplicity="1" />
+          <End Role="translate_task_type" Type="Self.translate_task_type" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_task_type">
+              <PropertyRef Name="task_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_vehicle_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="translate_vehicle" Type="Self.translate_vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_vehicle">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_vehicle_vehicle">
+          <End Role="vehicle" Type="Self.vehicle" Multiplicity="1" />
+          <End Role="translate_vehicle" Type="Self.translate_vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehicle">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_vehicle">
+              <PropertyRef Name="vehicle_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ArtPlanningModelsDatabaseStoreContainer">
+          <EntitySet Name="address" EntityType="Self.address" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="country" EntityType="Self.country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="folder" EntityType="Self.folder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="language" EntityType="Self.language" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="material" EntityType="Self.material" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mission" EntityType="Self.mission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mission_type" EntityType="Self.mission_type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="service" EntityType="Self.service" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="task" EntityType="Self.task" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="task_material" EntityType="Self.task_material" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="task_service" EntityType="Self.task_service" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="task_service_type" EntityType="Self.task_service_type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="task_staff" EntityType="Self.task_staff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="task_type" EntityType="Self.task_type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="task_vehicle" EntityType="Self.task_vehicle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="translate_material" EntityType="Self.translate_material" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="translate_service" EntityType="Self.translate_service" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="translate_task_type" EntityType="Self.translate_task_type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="translate_vehicle" EntityType="Self.translate_vehicle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vehicle" EntityType="Self.vehicle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="warehouse" EntityType="Self.warehouse" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_address_country" Association="Self.FK_address_country">
+            <End Role="country" EntitySet="country" />
+            <End Role="address" EntitySet="address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_language" Association="Self.FK_AspNetUsers_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mission_folder" Association="Self.FK_mission_folder">
+            <End Role="folder" EntitySet="folder" />
+            <End Role="mission" EntitySet="mission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mission_mission_type" Association="Self.FK_mission_mission_type">
+            <End Role="mission_type" EntitySet="mission_type" />
+            <End Role="mission" EntitySet="mission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_address" Association="Self.FK_task_address">
+            <End Role="address" EntitySet="address" />
+            <End Role="task" EntitySet="task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_material_material" Association="Self.FK_task_material_material">
+            <End Role="material" EntitySet="material" />
+            <End Role="task_material" EntitySet="task_material" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_material_task" Association="Self.FK_task_material_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="task_material" EntitySet="task_material" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_mission" Association="Self.FK_task_mission">
+            <End Role="mission" EntitySet="mission" />
+            <End Role="task" EntitySet="task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_service_AspNetUsers" Association="Self.FK_task_service_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="task_service" EntitySet="task_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_service_service" Association="Self.FK_task_service_service">
+            <End Role="service" EntitySet="service" />
+            <End Role="task_service" EntitySet="task_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_service_task" Association="Self.FK_task_service_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="task_service" EntitySet="task_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_service_task_service_type" Association="Self.FK_task_service_task_service_type">
+            <End Role="task_service_type" EntitySet="task_service_type" />
+            <End Role="task_service" EntitySet="task_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_staff_staff" Association="Self.FK_task_staff_staff">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="task_staff" EntitySet="task_staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_staff_task" Association="Self.FK_task_staff_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="task_staff" EntitySet="task_staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_task_type" Association="Self.FK_task_task_type">
+            <End Role="task_type" EntitySet="task_type" />
+            <End Role="task" EntitySet="task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_vehicle_task" Association="Self.FK_task_vehicle_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="task_vehicle" EntitySet="task_vehicle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_vehicle_vehicle" Association="Self.FK_task_vehicle_vehicle">
+            <End Role="vehicle" EntitySet="vehicle" />
+            <End Role="task_vehicle" EntitySet="task_vehicle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_material_language" Association="Self.FK_translate_material_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="translate_material" EntitySet="translate_material" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_material_material" Association="Self.FK_translate_material_material">
+            <End Role="material" EntitySet="material" />
+            <End Role="translate_material" EntitySet="translate_material" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_service_language" Association="Self.FK_translate_service_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="translate_service" EntitySet="translate_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_service_service" Association="Self.FK_translate_service_service">
+            <End Role="service" EntitySet="service" />
+            <End Role="translate_service" EntitySet="translate_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_task_type_language" Association="Self.FK_translate_task_type_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="translate_task_type" EntitySet="translate_task_type" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_task_type_task_type" Association="Self.FK_translate_task_type_task_type">
+            <End Role="task_type" EntitySet="task_type" />
+            <End Role="translate_task_type" EntitySet="translate_task_type" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_vehicle_language" Association="Self.FK_translate_vehicle_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="translate_vehicle" EntitySet="translate_vehicle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_vehicle_vehicle" Association="Self.FK_translate_vehicle_vehicle">
+            <End Role="vehicle" EntitySet="vehicle" />
+            <End Role="translate_vehicle" EntitySet="translate_vehicle" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ArtPlanning.Models.Database" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="address">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="country_id" Type="Int32" Nullable="false" />
+          <Property Name="street_line1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="street_line2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="number" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="box" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="zip" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="latitude" Type="Double" />
+          <Property Name="longitude" Type="Double" />
+          <Property Name="external_ref" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="task" Relationship="ArtPlanning.Models.Database.FK_task_address" FromRole="address" ToRole="task" />
+          <NavigationProperty Name="country" Relationship="ArtPlanning.Models.Database.FK_address_country" FromRole="address" ToRole="country" />
+        </EntityType>
+        <EntityType Name="folder">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="client_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="customer_name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="closed" Type="Boolean" />
+          <Property Name="closed_date" Type="DateTime" Precision="3" />
+          <Property Name="closed_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="mission" Relationship="Self.FK_mission_folder" FromRole="folder" ToRole="mission" />
+          <Property Name="customer_phone" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="language">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="short_name" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="charset" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sort_order" Type="Int32" />
+          <Property Name="displayed" Type="Boolean" />
+          <NavigationProperty Name="translate_material" Relationship="Self.FK_translate_material_language" FromRole="language" ToRole="translate_material" />
+          <NavigationProperty Name="translate_service" Relationship="Self.FK_translate_service_language" FromRole="language" ToRole="translate_service" />
+          <NavigationProperty Name="translate_task_type" Relationship="Self.FK_translate_task_type_language" FromRole="language" ToRole="translate_task_type" />
+          <NavigationProperty Name="translate_vehicle" Relationship="Self.FK_translate_vehicle_language" FromRole="language" ToRole="translate_vehicle" />
+          <NavigationProperty Name="AspNetUsers" Relationship="ArtPlanning.Models.Database.FK_AspNetUsers_language" FromRole="language" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="material">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="task_material" Relationship="Self.FK_task_material_material" FromRole="material" ToRole="task_material" />
+          <NavigationProperty Name="translate_material" Relationship="Self.FK_translate_material_material" FromRole="material" ToRole="translate_material" />
+        </EntityType>
+        <EntityType Name="mission">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="folder_id" Type="Int32" />
+          <Property Name="mission_type_id" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="folder" Relationship="Self.FK_mission_folder" FromRole="mission" ToRole="folder" />
+          <NavigationProperty Name="mission_type" Relationship="Self.FK_mission_mission_type" FromRole="mission" ToRole="mission_type" />
+          <NavigationProperty Name="task" Relationship="ArtPlanning.Models.Database.FK_task_mission" FromRole="mission" ToRole="task" />
+        </EntityType>
+        <EntityType Name="mission_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="mission" Relationship="Self.FK_mission_mission_type" FromRole="mission_type" ToRole="mission" />
+        </EntityType>
+        <EntityType Name="service">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="task_service" Relationship="Self.FK_task_service_service" FromRole="service" ToRole="task_service" />
+          <NavigationProperty Name="translate_service" Relationship="Self.FK_translate_service_service" FromRole="service" ToRole="translate_service" />
+        </EntityType>
+        <EntityType Name="task_material">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="task_id" Type="Int32" Nullable="false" />
+          <Property Name="material_id" Type="Int32" Nullable="false" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="material" Relationship="Self.FK_task_material_material" FromRole="task_material" ToRole="material" />
+          <NavigationProperty Name="task" Relationship="ArtPlanning.Models.Database.FK_task_material_task" FromRole="task_material" ToRole="task" />
+        </EntityType>
+        <EntityType Name="task_service">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="task_id" Type="Int32" Nullable="false" />
+          <Property Name="service_id" Type="Int32" Nullable="false" />
+          <Property Name="service_type_id" Type="Int32" Nullable="false" />
+          <Property Name="driver_id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="service" Relationship="Self.FK_task_service_service" FromRole="task_service" ToRole="service" />
+          <NavigationProperty Name="task_service_type" Relationship="Self.FK_task_service_task_service_type" FromRole="task_service" ToRole="task_service_type" />
+          <NavigationProperty Name="AspNetUsers" Relationship="ArtPlanning.Models.Database.FK_task_service_AspNetUsers" FromRole="task_service" ToRole="AspNetUsers" />
+          <NavigationProperty Name="task" Relationship="ArtPlanning.Models.Database.FK_task_service_task" FromRole="task_service" ToRole="task" />
+        </EntityType>
+        <EntityType Name="task_service_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="task_service" Relationship="Self.FK_task_service_task_service_type" FromRole="task_service_type" ToRole="task_service" />
+        </EntityType>
+        <EntityType Name="task_staff">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="task_id" Type="Int32" Nullable="false" />
+          <Property Name="driver_id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="comment" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="ArtPlanning.Models.Database.FK_task_staff_staff" FromRole="task_staff" ToRole="AspNetUsers" />
+          <NavigationProperty Name="task" Relationship="ArtPlanning.Models.Database.FK_task_staff_task" FromRole="task_staff" ToRole="task" />
+        </EntityType>
+        <EntityType Name="task_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="displayed" Type="Boolean" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="translate_task_type" Relationship="Self.FK_translate_task_type_task_type" FromRole="task_type" ToRole="translate_task_type" />
+          <NavigationProperty Name="task" Relationship="ArtPlanning.Models.Database.FK_task_task_type" FromRole="task_type" ToRole="task" />
+        </EntityType>
+        <EntityType Name="task_vehicle">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="task_id" Type="Int32" Nullable="false" />
+          <Property Name="vehicle_id" Type="Int32" Nullable="false" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="vehicle" Relationship="Self.FK_task_vehicle_vehicle" FromRole="task_vehicle" ToRole="vehicle" />
+          <NavigationProperty Name="task" Relationship="ArtPlanning.Models.Database.FK_task_vehicle_task" FromRole="task_vehicle" ToRole="task" />
+        </EntityType>
+        <EntityType Name="translate_material">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="language_id" Type="Int32" Nullable="false" />
+          <Property Name="material_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="language" Relationship="Self.FK_translate_material_language" FromRole="translate_material" ToRole="language" />
+          <NavigationProperty Name="material" Relationship="Self.FK_translate_material_material" FromRole="translate_material" ToRole="material" />
+        </EntityType>
+        <EntityType Name="translate_service">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="language_id" Type="Int32" Nullable="false" />
+          <Property Name="service_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="language" Relationship="Self.FK_translate_service_language" FromRole="translate_service" ToRole="language" />
+          <NavigationProperty Name="service" Relationship="Self.FK_translate_service_service" FromRole="translate_service" ToRole="service" />
+        </EntityType>
+        <EntityType Name="translate_task_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="language_id" Type="Int32" Nullable="false" />
+          <Property Name="task_type_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="language" Relationship="Self.FK_translate_task_type_language" FromRole="translate_task_type" ToRole="language" />
+          <NavigationProperty Name="task_type" Relationship="Self.FK_translate_task_type_task_type" FromRole="translate_task_type" ToRole="task_type" />
+        </EntityType>
+        <EntityType Name="translate_vehicle">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="language_id" Type="Int32" Nullable="false" />
+          <Property Name="vehicle_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="language" Relationship="Self.FK_translate_vehicle_language" FromRole="translate_vehicle" ToRole="language" />
+          <NavigationProperty Name="vehicle" Relationship="Self.FK_translate_vehicle_vehicle" FromRole="translate_vehicle" ToRole="vehicle" />
+        </EntityType>
+        <EntityType Name="vehicle">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="task_vehicle" Relationship="Self.FK_task_vehicle_vehicle" FromRole="vehicle" ToRole="task_vehicle" />
+          <NavigationProperty Name="translate_vehicle" Relationship="Self.FK_translate_vehicle_vehicle" FromRole="vehicle" ToRole="translate_vehicle" />
+        </EntityType>
+        <Association Name="FK_mission_folder">
+          <End Role="folder" Type="Self.folder" Multiplicity="0..1" />
+          <End Role="mission" Type="Self.mission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="folder">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="mission">
+              <PropertyRef Name="folder_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_material_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="translate_material" Type="Self.translate_material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_material">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_service_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="translate_service" Type="Self.translate_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_service">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_task_type_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="translate_task_type" Type="Self.translate_task_type" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_task_type">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_vehicle_language">
+          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="translate_vehicle" Type="Self.translate_vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_vehicle">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_material_material">
+          <End Role="material" Type="Self.material" Multiplicity="1" />
+          <End Role="task_material" Type="Self.task_material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="material">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_material">
+              <PropertyRef Name="material_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_material_material">
+          <End Role="material" Type="Self.material" Multiplicity="1" />
+          <End Role="translate_material" Type="Self.translate_material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="material">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_material">
+              <PropertyRef Name="material_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mission_mission_type">
+          <End Role="mission_type" Type="Self.mission_type" Multiplicity="0..1" />
+          <End Role="mission" Type="Self.mission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mission_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="mission">
+              <PropertyRef Name="mission_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_service_service">
+          <End Role="service" Type="Self.service" Multiplicity="1" />
+          <End Role="task_service" Type="Self.task_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_service">
+              <PropertyRef Name="service_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_service_service">
+          <End Role="service" Type="Self.service" Multiplicity="1" />
+          <End Role="translate_service" Type="Self.translate_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_service">
+              <PropertyRef Name="service_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_service_task_service_type">
+          <End Role="task_service_type" Type="Self.task_service_type" Multiplicity="1" />
+          <End Role="task_service" Type="Self.task_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task_service_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_service">
+              <PropertyRef Name="service_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_task_type_task_type">
+          <End Role="task_type" Type="Self.task_type" Multiplicity="1" />
+          <End Role="translate_task_type" Type="Self.translate_task_type" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_task_type">
+              <PropertyRef Name="task_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_vehicle_vehicle">
+          <End Role="vehicle" Type="Self.vehicle" Multiplicity="1" />
+          <End Role="task_vehicle" Type="Self.task_vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehicle">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_vehicle">
+              <PropertyRef Name="vehicle_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_translate_vehicle_vehicle">
+          <End Role="vehicle" Type="Self.vehicle" Multiplicity="1" />
+          <End Role="translate_vehicle" Type="Self.translate_vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehicle">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="translate_vehicle">
+              <PropertyRef Name="vehicle_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ARTSHIPPERSDatabase" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="address" EntityType="Self.address" />
+          <EntitySet Name="folder" EntityType="Self.folder" />
+          <EntitySet Name="language" EntityType="Self.language" />
+          <EntitySet Name="material" EntityType="Self.material" />
+          <EntitySet Name="mission" EntityType="Self.mission" />
+          <EntitySet Name="mission_type" EntityType="Self.mission_type" />
+          <EntitySet Name="service" EntityType="Self.service" />
+          <EntitySet Name="task_material" EntityType="Self.task_material" />
+          <EntitySet Name="task_service" EntityType="Self.task_service" />
+          <EntitySet Name="task_service_type" EntityType="Self.task_service_type" />
+          <EntitySet Name="task_staff" EntityType="Self.task_staff" />
+          <EntitySet Name="task_type" EntityType="Self.task_type" />
+          <EntitySet Name="task_vehicle" EntityType="Self.task_vehicle" />
+          <EntitySet Name="translate_material" EntityType="Self.translate_material" />
+          <EntitySet Name="translate_service" EntityType="Self.translate_service" />
+          <EntitySet Name="translate_task_type" EntityType="Self.translate_task_type" />
+          <EntitySet Name="translate_vehicle" EntityType="Self.translate_vehicle" />
+          <EntitySet Name="vehicle" EntityType="Self.vehicle" />
+          <AssociationSet Name="FK_mission_folder" Association="Self.FK_mission_folder">
+            <End Role="folder" EntitySet="folder" />
+            <End Role="mission" EntitySet="mission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_material_language" Association="Self.FK_translate_material_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="translate_material" EntitySet="translate_material" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_service_language" Association="Self.FK_translate_service_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="translate_service" EntitySet="translate_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_task_type_language" Association="Self.FK_translate_task_type_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="translate_task_type" EntitySet="translate_task_type" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_vehicle_language" Association="Self.FK_translate_vehicle_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="translate_vehicle" EntitySet="translate_vehicle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_material_material" Association="Self.FK_task_material_material">
+            <End Role="material" EntitySet="material" />
+            <End Role="task_material" EntitySet="task_material" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_material_material" Association="Self.FK_translate_material_material">
+            <End Role="material" EntitySet="material" />
+            <End Role="translate_material" EntitySet="translate_material" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mission_mission_type" Association="Self.FK_mission_mission_type">
+            <End Role="mission_type" EntitySet="mission_type" />
+            <End Role="mission" EntitySet="mission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_service_service" Association="Self.FK_task_service_service">
+            <End Role="service" EntitySet="service" />
+            <End Role="task_service" EntitySet="task_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_service_service" Association="Self.FK_translate_service_service">
+            <End Role="service" EntitySet="service" />
+            <End Role="translate_service" EntitySet="translate_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_service_task_service_type" Association="Self.FK_task_service_task_service_type">
+            <End Role="task_service_type" EntitySet="task_service_type" />
+            <End Role="task_service" EntitySet="task_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_task_type_task_type" Association="Self.FK_translate_task_type_task_type">
+            <End Role="task_type" EntitySet="task_type" />
+            <End Role="translate_task_type" EntitySet="translate_task_type" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_vehicle_vehicle" Association="Self.FK_task_vehicle_vehicle">
+            <End Role="vehicle" EntitySet="vehicle" />
+            <End Role="task_vehicle" EntitySet="task_vehicle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_translate_vehicle_vehicle" Association="Self.FK_translate_vehicle_vehicle">
+            <End Role="vehicle" EntitySet="vehicle" />
+            <End Role="translate_vehicle" EntitySet="translate_vehicle" />
+          </AssociationSet>
+          <EntitySet Name="AspNetUsers" EntityType="ArtPlanning.Models.Database.AspNetUsers" />
+          <AssociationSet Name="FK_AspNetUsers_language" Association="ArtPlanning.Models.Database.FK_AspNetUsers_language">
+            <End Role="language" EntitySet="language" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_service_AspNetUsers" Association="ArtPlanning.Models.Database.FK_task_service_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="task_service" EntitySet="task_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_staff_staff" Association="ArtPlanning.Models.Database.FK_task_staff_staff">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="task_staff" EntitySet="task_staff" />
+          </AssociationSet>
+          <EntitySet Name="task" EntityType="ArtPlanning.Models.Database.task" />
+          <AssociationSet Name="FK_task_address" Association="ArtPlanning.Models.Database.FK_task_address">
+            <End Role="address" EntitySet="address" />
+            <End Role="task" EntitySet="task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_mission" Association="ArtPlanning.Models.Database.FK_task_mission">
+            <End Role="mission" EntitySet="mission" />
+            <End Role="task" EntitySet="task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_material_task" Association="ArtPlanning.Models.Database.FK_task_material_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="task_material" EntitySet="task_material" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_service_task" Association="ArtPlanning.Models.Database.FK_task_service_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="task_service" EntitySet="task_service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_staff_task" Association="ArtPlanning.Models.Database.FK_task_staff_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="task_staff" EntitySet="task_staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_task_type" Association="ArtPlanning.Models.Database.FK_task_task_type">
+            <End Role="task_type" EntitySet="task_type" />
+            <End Role="task" EntitySet="task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_vehicle_task" Association="ArtPlanning.Models.Database.FK_task_vehicle_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="task_vehicle" EntitySet="task_vehicle" />
+          </AssociationSet>
+          <EntitySet Name="warehouse" EntityType="ArtPlanning.Models.Database.warehouse" />
+          <EntitySet Name="country" EntityType="ArtPlanning.Models.Database.country" />
+          <AssociationSet Name="FK_address_country" Association="ArtPlanning.Models.Database.FK_address_country">
+            <End Role="country" EntitySet="country" />
+            <End Role="address" EntitySet="address" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="last_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="first_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="language_id" Type="Int32" Nullable="false" />
+          <Property Name="birth_date" Type="DateTime" Precision="0" />
+          <Property Name="last_connection_date" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="color" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="initials" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="language" Relationship="ArtPlanning.Models.Database.FK_AspNetUsers_language" FromRole="AspNetUsers" ToRole="language" />
+          <NavigationProperty Name="task_service" Relationship="ArtPlanning.Models.Database.FK_task_service_AspNetUsers" FromRole="AspNetUsers" ToRole="task_service" />
+          <NavigationProperty Name="task_staff" Relationship="ArtPlanning.Models.Database.FK_task_staff_staff" FromRole="AspNetUsers" ToRole="task_staff" />
+        </EntityType>
+        <Association Name="FK_AspNetUsers_language">
+          <End Type="ArtPlanning.Models.Database.language" Role="language" Multiplicity="1" />
+          <End Type="ArtPlanning.Models.Database.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="language">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="language_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_service_AspNetUsers">
+          <End Type="ArtPlanning.Models.Database.AspNetUsers" Role="AspNetUsers" Multiplicity="0..1" />
+          <End Type="ArtPlanning.Models.Database.task_service" Role="task_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="task_service">
+              <PropertyRef Name="driver_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_staff_staff">
+          <End Type="ArtPlanning.Models.Database.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="ArtPlanning.Models.Database.task_staff" Role="task_staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="task_staff">
+              <PropertyRef Name="driver_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="task">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mission_id" Type="Int32" Nullable="false" />
+          <Property Name="task_type_id" Type="Int32" />
+          <Property Name="address_id" Type="Int32" />
+          <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="scheduled_start_date" Type="DateTime" Precision="3" />
+          <Property Name="scheduled_end_date" Type="DateTime" Precision="3" />
+          <Property Name="arrival_date" Type="DateTime" Precision="3" />
+          <Property Name="departure_date" Type="DateTime" Precision="3" />
+          <Property Name="arrival_mileage" Type="Int32" />
+          <Property Name="departure_mileage" Type="Int32" />
+          <Property Name="day" Type="Boolean" />
+          <Property Name="fixed" Type="Boolean" />
+          <Property Name="comment" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="sql_modified" Type="Boolean" />
+          <Property Name="sql_deleted" Type="Boolean" />
+          <NavigationProperty Name="address" Relationship="ArtPlanning.Models.Database.FK_task_address" FromRole="task" ToRole="address" />
+          <NavigationProperty Name="mission" Relationship="ArtPlanning.Models.Database.FK_task_mission" FromRole="task" ToRole="mission" />
+          <NavigationProperty Name="task_material" Relationship="ArtPlanning.Models.Database.FK_task_material_task" FromRole="task" ToRole="task_material" />
+          <NavigationProperty Name="task_service" Relationship="ArtPlanning.Models.Database.FK_task_service_task" FromRole="task" ToRole="task_service" />
+          <NavigationProperty Name="task_staff" Relationship="ArtPlanning.Models.Database.FK_task_staff_task" FromRole="task" ToRole="task_staff" />
+          <NavigationProperty Name="task_type" Relationship="ArtPlanning.Models.Database.FK_task_task_type" FromRole="task" ToRole="task_type" />
+          <NavigationProperty Name="task_vehicle" Relationship="ArtPlanning.Models.Database.FK_task_vehicle_task" FromRole="task" ToRole="task_vehicle" />
+          <Property Name="report" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_task_address">
+          <End Type="ArtPlanning.Models.Database.address" Role="address" Multiplicity="0..1" />
+          <End Type="ArtPlanning.Models.Database.task" Role="task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="address">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task">
+              <PropertyRef Name="address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_mission">
+          <End Type="ArtPlanning.Models.Database.mission" Role="mission" Multiplicity="1" />
+          <End Type="ArtPlanning.Models.Database.task" Role="task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mission">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task">
+              <PropertyRef Name="mission_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_material_task">
+          <End Type="ArtPlanning.Models.Database.task" Role="task" Multiplicity="1" />
+          <End Type="ArtPlanning.Models.Database.task_material" Role="task_material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_material">
+              <PropertyRef Name="task_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_service_task">
+          <End Type="ArtPlanning.Models.Database.task" Role="task" Multiplicity="1" />
+          <End Type="ArtPlanning.Models.Database.task_service" Role="task_service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_service">
+              <PropertyRef Name="task_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_staff_task">
+          <End Type="ArtPlanning.Models.Database.task" Role="task" Multiplicity="1" />
+          <End Type="ArtPlanning.Models.Database.task_staff" Role="task_staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_staff">
+              <PropertyRef Name="task_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_task_type">
+          <End Type="ArtPlanning.Models.Database.task_type" Role="task_type" Multiplicity="0..1" />
+          <End Type="ArtPlanning.Models.Database.task" Role="task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task">
+              <PropertyRef Name="task_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_vehicle_task">
+          <End Type="ArtPlanning.Models.Database.task" Role="task" Multiplicity="1" />
+          <End Type="ArtPlanning.Models.Database.task_vehicle" Role="task_vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="task_vehicle">
+              <PropertyRef Name="task_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="warehouse">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="parent_id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="position" Type="Int16" Nullable="false" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="country">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="member_of_eu" Type="Int32" />
+          <Property Name="member_of_un" Type="Int32" />
+          <Property Name="official" Type="Int32" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="added_date" Type="DateTime" Precision="3" />
+          <Property Name="added_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="modification_date" Type="DateTime" Precision="3" />
+          <Property Name="modification_user" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="address" Relationship="ArtPlanning.Models.Database.FK_address_country" FromRole="country" ToRole="address" />
+        </EntityType>
+        <Association Name="FK_address_country">
+          <End Type="ArtPlanning.Models.Database.country" Role="country" Multiplicity="1" />
+          <End Type="ArtPlanning.Models.Database.address" Role="address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="country">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="address">
+              <PropertyRef Name="country_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ArtPlanningModelsDatabaseStoreContainer" CdmEntityContainer="ARTSHIPPERSDatabase">
+          <EntitySetMapping Name="address">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.address">
+              <MappingFragment StoreEntitySet="address">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="country_id" ColumnName="country_id" />
+                <ScalarProperty Name="street_line1" ColumnName="street_line1" />
+                <ScalarProperty Name="street_line2" ColumnName="street_line2" />
+                <ScalarProperty Name="number" ColumnName="number" />
+                <ScalarProperty Name="box" ColumnName="box" />
+                <ScalarProperty Name="zip" ColumnName="zip" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="external_ref" ColumnName="external_ref" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="folder">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.folder">
+              <MappingFragment StoreEntitySet="folder">
+                <ScalarProperty Name="customer_phone" ColumnName="customer_phone" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="customer_name" ColumnName="customer_name" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+                <ScalarProperty Name="closed" ColumnName="closed" />
+                <ScalarProperty Name="closed_date" ColumnName="closed_date" />
+                <ScalarProperty Name="closed_user" ColumnName="closed_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="language">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.language">
+              <MappingFragment StoreEntitySet="language">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="short_name" ColumnName="short_name" />
+                <ScalarProperty Name="charset" ColumnName="charset" />
+                <ScalarProperty Name="sort_order" ColumnName="sort_order" />
+                <ScalarProperty Name="displayed" ColumnName="displayed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="material">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.material">
+              <MappingFragment StoreEntitySet="material">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mission">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.mission">
+              <MappingFragment StoreEntitySet="mission">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="folder_id" ColumnName="folder_id" />
+                <ScalarProperty Name="mission_type_id" ColumnName="mission_type_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mission_type">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.mission_type">
+              <MappingFragment StoreEntitySet="mission_type">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="service">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.service">
+              <MappingFragment StoreEntitySet="service">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="task_material">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.task_material">
+              <MappingFragment StoreEntitySet="task_material">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="task_id" ColumnName="task_id" />
+                <ScalarProperty Name="material_id" ColumnName="material_id" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="task_service">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.task_service">
+              <MappingFragment StoreEntitySet="task_service">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="task_id" ColumnName="task_id" />
+                <ScalarProperty Name="service_id" ColumnName="service_id" />
+                <ScalarProperty Name="service_type_id" ColumnName="service_type_id" />
+                <ScalarProperty Name="driver_id" ColumnName="driver_id" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="task_service_type">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.task_service_type">
+              <MappingFragment StoreEntitySet="task_service_type">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="task_staff">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.task_staff">
+              <MappingFragment StoreEntitySet="task_staff">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="task_id" ColumnName="task_id" />
+                <ScalarProperty Name="driver_id" ColumnName="driver_id" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="task_type">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.task_type">
+              <MappingFragment StoreEntitySet="task_type">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="displayed" ColumnName="displayed" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="task_vehicle">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.task_vehicle">
+              <MappingFragment StoreEntitySet="task_vehicle">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="task_id" ColumnName="task_id" />
+                <ScalarProperty Name="vehicle_id" ColumnName="vehicle_id" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="translate_material">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.translate_material">
+              <MappingFragment StoreEntitySet="translate_material">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="language_id" ColumnName="language_id" />
+                <ScalarProperty Name="material_id" ColumnName="material_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="translate_service">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.translate_service">
+              <MappingFragment StoreEntitySet="translate_service">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="language_id" ColumnName="language_id" />
+                <ScalarProperty Name="service_id" ColumnName="service_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="translate_task_type">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.translate_task_type">
+              <MappingFragment StoreEntitySet="translate_task_type">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="language_id" ColumnName="language_id" />
+                <ScalarProperty Name="task_type_id" ColumnName="task_type_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="translate_vehicle">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.translate_vehicle">
+              <MappingFragment StoreEntitySet="translate_vehicle">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="language_id" ColumnName="language_id" />
+                <ScalarProperty Name="vehicle_id" ColumnName="vehicle_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vehicle">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.vehicle">
+              <MappingFragment StoreEntitySet="vehicle">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.AspNetUsers">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="initials" ColumnName="initials" />
+                <ScalarProperty Name="color" ColumnName="color" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="last_connection_date" ColumnName="last_connection_date" />
+                <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+                <ScalarProperty Name="language_id" ColumnName="language_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="task">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.task">
+              <MappingFragment StoreEntitySet="task">
+                <ScalarProperty Name="report" ColumnName="report" />
+                <ScalarProperty Name="sql_deleted" ColumnName="sql_deleted" />
+                <ScalarProperty Name="sql_modified" ColumnName="sql_modified" />
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="fixed" ColumnName="fixed" />
+                <ScalarProperty Name="day" ColumnName="day" />
+                <ScalarProperty Name="departure_mileage" ColumnName="departure_mileage" />
+                <ScalarProperty Name="arrival_mileage" ColumnName="arrival_mileage" />
+                <ScalarProperty Name="departure_date" ColumnName="departure_date" />
+                <ScalarProperty Name="arrival_date" ColumnName="arrival_date" />
+                <ScalarProperty Name="scheduled_end_date" ColumnName="scheduled_end_date" />
+                <ScalarProperty Name="scheduled_start_date" ColumnName="scheduled_start_date" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="address_id" ColumnName="address_id" />
+                <ScalarProperty Name="task_type_id" ColumnName="task_type_id" />
+                <ScalarProperty Name="mission_id" ColumnName="mission_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="warehouse">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.warehouse">
+              <MappingFragment StoreEntitySet="warehouse">
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="parent_id" ColumnName="parent_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="country">
+            <EntityTypeMapping TypeName="ArtPlanning.Models.Database.country">
+              <MappingFragment StoreEntitySet="country">
+                <ScalarProperty Name="modification_user" ColumnName="modification_user" />
+                <ScalarProperty Name="modification_date" ColumnName="modification_date" />
+                <ScalarProperty Name="added_user" ColumnName="added_user" />
+                <ScalarProperty Name="added_date" ColumnName="added_date" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="official" ColumnName="official" />
+                <ScalarProperty Name="member_of_un" ColumnName="member_of_un" />
+                <ScalarProperty Name="member_of_eu" ColumnName="member_of_eu" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
