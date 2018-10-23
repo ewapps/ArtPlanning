@@ -47,6 +47,7 @@ namespace ArtPlanning.Common
 
         public static class User
         {
+            // MODIFICATION
 
             /*
              *  Obtient une chaîne de caractères correspondant au nom et prénom de l'utilisateur.
